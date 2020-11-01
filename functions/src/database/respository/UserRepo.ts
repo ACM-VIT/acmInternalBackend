@@ -4,7 +4,7 @@ import User, { USER_COLLECTION_NAME } from "../model/User";
 
 export default class UserRepo {
   public static async create(user: User): Promise<FirestoreDocRef> {
-    const createdUserRef = usersRef.doc(user.email);
+    const createdUserRef = usersRef.doc();
     await createdUserRef.set(user, { merge: true });
     return createdUserRef;
   }
@@ -12,20 +12,38 @@ export default class UserRepo {
   public static async findByEmail(
     email: string
   ): Promise<FirestoreDoc | undefined> {
-    const user = await usersRef.doc(email).get();
-    return user.data();
+    const snapshot = await usersRef.where("email", "==", email).get();
+    if (snapshot.empty) return undefined;
+    const res: any = [];
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res[0];
+  }
+  public static async findById(id: string): Promise<FirestoreDoc | undefined> {
+    const snapshot = await usersRef.doc(id).get();
+    if (!snapshot.exists) return undefined;
+    return { id: snapshot.id, ...snapshot.data() };
   }
 
-  public static async fetchAll(): Promise<FirestoreDoc[]> {
+  public static async fetchAll(): Promise<FirestoreDoc[] | undefined> {
     const allUsers = await firestoreInstance
       .collection(USER_COLLECTION_NAME)
       .get();
-    const allUsersDocs = allUsers.docs.map((doc) => doc.data());
-
-    return allUsersDocs;
-  }
-  public static async deleteByEmail(email: string): Promise<any> {
-    const res = await usersRef.doc(email).delete();
+    if (allUsers.empty) return undefined;
+    const res: any = [];
+    allUsers.forEach((doc) =>
+      res.push({
+        id: doc.id,
+        ...doc.data(),
+      })
+    );
     return res;
+  }
+  public static async delete(id: string): Promise<any> {
+    const res = await usersRef.doc(id).delete();
+    return res;
+  }
+
+  public static async update(id: string, updates: any): Promise<any> {
+    await usersRef.doc(id).update(updates);
   }
 }

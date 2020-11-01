@@ -10,6 +10,10 @@ export enum ValidationSource {
   PARAM = "params",
 }
 
+export const JoiFirebaseId = () => {
+  return Joi.string().required();
+};
+
 export const JoiUrlEndpoint = () =>
   Joi.string().custom((value: string, helpers) => {
     if (value.includes("://")) return helpers.error("any.invalid");

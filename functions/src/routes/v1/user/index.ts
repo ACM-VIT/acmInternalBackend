@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.use("/new", newUser);
 router.use("/fetch", fetchUser);
-router.use("/updateUser", updateUser);
+router.use("/update", updateUser);
 router.use("/delete", delUser);
 
 export default router;

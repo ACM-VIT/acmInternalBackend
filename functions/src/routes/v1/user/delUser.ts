@@ -10,17 +10,18 @@ const router = express.Router();
 
 router.delete(
   "/",
-  validator(userSchema.findByEmail),
+  validator(userSchema.delete),
   asyncHandler(async (req, res) => {
-    const { email } = req.body;
+    const { id } = req.body;
 
-    const user = await UserRepo.findByEmail(email);
-    if (!user) throw new BadRequestError("No such user with that email exists");
+    const user = await UserRepo.findById(id);
+    if (!user)
+      throw new BadRequestError("No such user with that document id exists");
 
     try {
-      await UserRepo.deleteByEmail(email);
+      await UserRepo.delete(id);
       new SuccessMsgResponse(
-        `User sucesssfully deleted of email: ${email}`
+        `User sucesssfully deleted of email: ${user.email}`
       ).send(res);
     } catch (err) {
       throw new InternalError("Unable to delete user");

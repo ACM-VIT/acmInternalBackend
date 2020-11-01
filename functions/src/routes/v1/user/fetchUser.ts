@@ -32,4 +32,18 @@ router.get(
   })
 );
 
+router.get(
+  "/byId",
+  validator(userSchema.delete),
+  asyncHandler(async (req, res) => {
+    const { id } = req.body;
+
+    const user = await UserRepo.findById(id);
+    if (!user)
+      throw new BadRequestError("No user exists with that document id");
+
+    new SuccessResponse(`User with id ${id}`, { user }).send(res);
+  })
+);
+
 export default router;

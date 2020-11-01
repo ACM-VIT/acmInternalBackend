@@ -1,9 +1,10 @@
 import Joi from "joi";
+import { JoiFirebaseId } from "../../../helpers/validator";
 
 export default {
   new: Joi.object().keys({
     full_name: Joi.string().required(),
-    email: Joi.string().required(),
+    email: Joi.string().email().required(),
     department: Joi.string().required(),
     description: Joi.string(),
     personal_profiles: Joi.array(),
@@ -11,6 +12,19 @@ export default {
     accounts_connected: Joi.array(),
   }),
   findByEmail: Joi.object().keys({
-    email: Joi.string().required(),
+    email: Joi.string().email().required(),
+  }),
+  update: Joi.object().keys({
+    id: JoiFirebaseId(), //is required
+    email: Joi.string().email(),
+    full_name: Joi.string(),
+    department: Joi.string(),
+    description: Joi.string(),
+    personal_profiles: Joi.array(),
+    projects: Joi.array(),
+    accounts_connected: Joi.array(),
+  }),
+  delete: Joi.object().keys({
+    id: JoiFirebaseId(), //isrequired
   }),
 };
