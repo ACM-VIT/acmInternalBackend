@@ -15,7 +15,7 @@ router.delete(
     const { email } = req.body;
 
     const user = await UserRepo.findByEmail(email);
-    if (!user) throw new BadRequestError("No user user exists");
+    if (!user) throw new BadRequestError("No such user with that email exists");
 
     try {
       await UserRepo.deleteByEmail(email);
