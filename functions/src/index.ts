@@ -9,13 +9,22 @@ import { corsUrl, environment } from "./config";
 import routesV1 from "./routes/v1";
 import { ApiError, InternalError, NotFoundError } from "./core/ApiError";
 import Logger from "./core/Logger";
+import { USER_COLLECTION_NAME } from "./database/model/User";
 
+//Firestore dec start
 try {
   admin.initializeApp(functions.config().firebase);
 } catch (e) {
   functions.logger.info("Error in initilizing firestore");
 }
 export const firestoreInstance = admin.firestore();
+export type FirestoreDocRef = FirebaseFirestore.DocumentReference<
+  FirebaseFirestore.DocumentData
+>;
+export type FirestoreDoc = FirebaseFirestore.DocumentData;
+export const usersRef = firestoreInstance.collection(USER_COLLECTION_NAME);
+//Firestore dec end
+
 const app = express();
 app.use(
   bodyParser.urlencoded({
