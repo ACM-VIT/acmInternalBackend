@@ -24,4 +24,8 @@ export default class UserRepo {
 
     return allUsersDocs;
   }
+  public static async deleteByEmail(email: string): Promise<any> {
+    const res = await usersRef.doc(email).delete();
+    return res;
+  }
 }
