@@ -10,6 +10,7 @@ import routesV1 from "./routes/v1";
 import { ApiError, InternalError, NotFoundError } from "./core/ApiError";
 import Logger from "./core/Logger";
 import { USER_COLLECTION_NAME } from "./database/model/User";
+import { SuccessMsgResponse } from "./core/ApiResponse";
 
 //Firestore dec start
 try {
@@ -37,6 +38,11 @@ app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 app.use(morgan("tiny", { stream: RequestLogger }));
 
 app.use("/v1", routesV1);
+app.get("/", (req, res) => {
+  new SuccessMsgResponse(
+    "Welcome to the Acm Internal Ecosystem Backend v1.0"
+  ).send(res);
+});
 
 app.use((req, res, next) => next(new NotFoundError()));
 //@ts-ignore
