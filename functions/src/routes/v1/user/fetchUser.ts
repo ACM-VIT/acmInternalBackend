@@ -3,7 +3,7 @@ import express from "express";
 import { SuccessResponse } from "../../../core/ApiResponse";
 import UserRepo from "../../../database/respository/UserRepo";
 import { BadRequestError } from "../../../core/ApiError";
-import validator from "../../../helpers/validator";
+import validator, { ValidationSource } from "../../../helpers/validator";
 import userSchema from "./userSchema";
 
 const router = express.Router();
@@ -33,10 +33,10 @@ router.get(
 );
 
 router.get(
-  "/byId",
-  validator(userSchema.delete),
+  "/byId/:id",
+  validator(userSchema.byId, ValidationSource.PARAM),
   asyncHandler(async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
 
     const user = await UserRepo.findById(id);
     if (!user)

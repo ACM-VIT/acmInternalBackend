@@ -24,7 +24,7 @@ export default {
     projects: Joi.array(),
     accounts_connected: Joi.array(),
   }),
-  delete: Joi.object().keys({
+  byId: Joi.object().keys({
     id: JoiFirebaseId(), //isrequired
   }),
 };
