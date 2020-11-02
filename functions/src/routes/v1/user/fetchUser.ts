@@ -20,10 +20,10 @@ router.get(
 );
 
 router.get(
-  "/byEmail",
-  validator(userSchema.findByEmail),
+  "/byEmail/:email",
+  validator(userSchema.findByEmail, ValidationSource.PARAM),
   asyncHandler(async (req, res) => {
-    const { email } = req.body;
+    const { email } = req.params;
 
     const user = await UserRepo.findByEmail(email);
     if (!user) throw new BadRequestError("No user exists with that email id");
