@@ -15,7 +15,6 @@ export default {
     email: Joi.string().email().required(),
   }),
   update: Joi.object().keys({
-    id: JoiFirebaseId(), //is required
     email: Joi.string().email(),
     full_name: Joi.string(),
     department: Joi.string(),
