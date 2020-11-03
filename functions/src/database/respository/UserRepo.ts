@@ -46,4 +46,15 @@ export default class UserRepo {
   public static async update(id: string, updates: any): Promise<any> {
     await usersRef.doc(id).update(updates);
   }
+
+  public static async updatePersonalLinks(
+    id: string,
+    updates: any
+  ): Promise<any> {
+    const user = await this.findById(id);
+    if (!user) return undefined;
+    if (!user.personal_profiles) user.personal_profiles = {};
+    user.personal_profiles = { ...user.personal_profiles, ...updates };
+    this.update(id, user);
+  }
 }

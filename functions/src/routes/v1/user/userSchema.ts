@@ -26,4 +26,5 @@ export default {
   byId: Joi.object().keys({
     id: JoiFirebaseId(), //isrequired
   }),
+  updatePersonalProfiles: Joi.object().min(1).pattern(/\w/, Joi.string().uri()), //minimum one key
 };

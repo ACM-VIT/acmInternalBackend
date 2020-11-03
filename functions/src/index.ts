@@ -19,6 +19,7 @@ try {
   functions.logger.info("Error in initilizing firestore");
 }
 export const firestoreInstance = admin.firestore();
+export const firestoreAltInstance = admin.firestore;
 export type FirestoreDocRef = FirebaseFirestore.DocumentReference<
   FirebaseFirestore.DocumentData
 >;
