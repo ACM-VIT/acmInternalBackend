@@ -27,4 +27,19 @@ export default {
   byName:Joi.object().keys({
     name:Joi.string().required()
   }),
+  update: Joi.object().keys({
+    name: Joi.string().min(1),
+    desc: Joi.string().min(1),
+    status: Joi.any()
+      .valid(...status),
+    teamMembers: Joi.array()
+      .items(Joi.string().email().required().min(1))
+      .min(1),
+  }),
+  updateResource:Joi.object().keys({
+    resources: Joi.object().min(1).pattern(/\w/, Joi.string().uri()), //minimum one key;
+  }),
+  updateWanted:Joi.object().keys({
+    wanted: Joi.array().items(Joi.string().required().min(1)).min(1),
+  }),
 };

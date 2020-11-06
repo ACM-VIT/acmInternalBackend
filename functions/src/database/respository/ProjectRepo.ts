@@ -8,6 +8,10 @@ export default class ProjectRepo {
     return createdProjectRef;
   }
 
+  public static async update(id: string, updates: any): Promise<any> {
+    await projectsRef.doc(id).update(updates);
+  }
+
   public static async findByName(
     name: string
   ): Promise<FirestoreDoc | undefined> {
