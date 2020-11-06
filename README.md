@@ -3,7 +3,7 @@
 <h1 align="center"> ACM INTERNAL BACKEND V1.0 </h1>
 
 <p align="center"> 
-what the title says 
+Serverless backend for the acm internal project management eco system made using firebase cloud functions and typescript.
 </p>
 
 <p>
@@ -22,6 +22,8 @@ Refer the below link for
 2. Documnetation 
 
 https://www.notion.so/ACM-internal-app-a9a4ceef6a174ef9b5a2629356d38543
+
+This Projet is open source and any contributions is appreciated
 
 ---
 
