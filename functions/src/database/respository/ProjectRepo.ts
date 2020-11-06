@@ -1,4 +1,4 @@
-import { FirestoreDoc, FirestoreDocRef, firestoreInstance, projectsRef } from "../..";
+import {  FirestoreDoc, FirestoreDocRef, firestoreInstance, projectsRef } from "../..";
 import Project, { PROJECT_COLLECTION_NAME } from "../model/Project";
 
 export default class ProjectRepo {
@@ -51,10 +51,20 @@ export default class ProjectRepo {
     updates: any
   ): Promise<any> {
     const project = await this.findById(id);
+    if(project) delete project["id"];
     if (!project) return undefined;
     if (!project.resources) project.resources = {};
     project.resources = { ...project.resources, ...updates };
-    this.update(id, project);
+    await this.update(id, project);
+  }
+
+  public static async updateWanted(id:string,updates:any):Promise<any>{
+    const project = await this.findById(id);
+    if(project) delete project["id"];
+    if (!project) return undefined;
+    if (!project.wanted) project.wanted = {};
+    project.wanted = { ...project.wanted, ...updates };
+    await this.update(id, project);
   }
 }
 

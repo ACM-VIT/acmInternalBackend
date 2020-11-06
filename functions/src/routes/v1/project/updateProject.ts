@@ -10,7 +10,7 @@ import { SuccessResponse } from "../../../core/ApiResponse";
 const router = express.Router();
 
 router.put(
-    "/:id",
+    "/byId/:id",
     validator(projectSchema.byId, ValidationSource.PARAM),
     validator(projectSchema.update),
     asyncHandler(async (req, res) => {
@@ -26,7 +26,7 @@ router.put(
           updatedProject,
         }).send(res);
       } catch (err) {
-        throw new InternalError("Required at lease one parameter to update. PLease do not supply an empty req.body for update");
+        throw new InternalError("Required at lease one parameter to update. Please do not supply an empty req.body for update");
       }
     })
 );
@@ -47,9 +47,31 @@ router.put(
           updatedProject,
         }).send(res);
       } catch (err) {
-        throw new InternalError("Required at lease one parameter to update. PLease do not supply an empty req.body for update");
+        throw new InternalError("Required at lease one parameter to update. Please do not supply an empty req.body for update");
       }
     })
+);
+
+router.put(
+  "/rolesWanted/:id",
+  validator(projectSchema.byId, ValidationSource.PARAM),
+  validator(projectSchema.updateWanted),
+  asyncHandler(async (req, res) => {
+    const docId = req.params.id;
+    const user = await ProjectRepo.findById(docId);
+    if (!user)
+      throw new BadRequestError(`User with id ${docId} does not exist`);
+
+    try {
+      await ProjectRepo.updateWanted(docId, req.body);
+      const updatedProject = await ProjectRepo.findById(docId);
+      new SuccessResponse(`Sucessfully updated project of id ${docId}`, {
+        updatedProject,
+      }).send(res);
+    } catch (err) {
+      throw new InternalError("Required at lease one parameter to update. Please do not supply an empty req.body for update");
+    }
+  })
 );
 
 export default router;

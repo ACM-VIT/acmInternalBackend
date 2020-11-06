@@ -37,7 +37,5 @@ export default {
       .min(1),
   }).required(),
   updateResource:Joi.object().min(1).pattern(/\w/, Joi.string().uri()).required(), //minimum one key;
-  updateWanted:Joi.object().keys({
-    wanted: Joi.array().items(Joi.string().required().min(1)).min(1).required(),
-  }),
+  updateWanted:Joi.object().min(1).pattern(/\w/, Joi.string().required()),
 };
