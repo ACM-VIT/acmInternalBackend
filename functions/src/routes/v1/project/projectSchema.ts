@@ -35,11 +35,9 @@ export default {
     teamMembers: Joi.array()
       .items(Joi.string().email().required().min(1))
       .min(1),
-  }),
-  updateResource:Joi.object().keys({
-    resources: Joi.object().min(1).pattern(/\w/, Joi.string().uri()), //minimum one key;
-  }),
+  }).required(),
+  updateResource:Joi.object().min(1).pattern(/\w/, Joi.string().uri()).required(), //minimum one key;
   updateWanted:Joi.object().keys({
-    wanted: Joi.array().items(Joi.string().required().min(1)).min(1),
+    wanted: Joi.array().items(Joi.string().required().min(1)).min(1).required(),
   }),
 };

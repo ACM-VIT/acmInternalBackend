@@ -25,9 +25,30 @@ router.put(
           updatedProject,
         }).send(res);
       } catch (err) {
-        throw new InternalError("Unable to update project");
+        throw new InternalError("Required at lease one parameter to update. PLease do not supply an empty req.body for update");
       }
     })
-  );
+);
+router.put(
+    "/projectResourcesLinks/:id",
+    validator(projectSchema.byId, ValidationSource.PARAM),
+    validator(projectSchema.updateResource),
+    asyncHandler(async (req, res) => {
+      const docId = req.params.id;
+      const user = await ProjectRepo.findById(docId);
+      if (!user)
+        throw new BadRequestError(`User with id ${docId} does not exist`);
+  
+      try {
+        await ProjectRepo.updateResourcesLinks(docId, req.body);
+        const updatedProject = await ProjectRepo.findById(docId);
+        new SuccessResponse(`Sucessfully updated project of id ${docId}`, {
+          updatedProject,
+        }).send(res);
+      } catch (err) {
+        throw new InternalError("Required at lease one parameter to update. PLease do not supply an empty req.body for update");
+      }
+    })
+);
 
 export default router;
