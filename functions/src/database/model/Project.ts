@@ -2,6 +2,7 @@ export enum ProjectStatus {
   IDEATION = "ideation",
   REVIEW = "review",
   IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
 }
 export default interface Project {
   name: string;
@@ -11,3 +12,5 @@ export default interface Project {
   status: ProjectStatus;
   teamMembers?: Array<string>;
 }
+
+export const PROJECT_COLLECTION_NAME = "Projects";

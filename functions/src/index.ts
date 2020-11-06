@@ -11,6 +11,7 @@ import { ApiError, InternalError, NotFoundError } from "./core/ApiError";
 import Logger from "./core/Logger";
 import { USER_COLLECTION_NAME } from "./database/model/User";
 import { SuccessMsgResponse } from "./core/ApiResponse";
+import { PROJECT_COLLECTION_NAME } from "./database/model/Project";
 
 //Firestore dec start
 try {
@@ -25,6 +26,9 @@ export type FirestoreDocRef = FirebaseFirestore.DocumentReference<
 >;
 export type FirestoreDoc = FirebaseFirestore.DocumentData;
 export const usersRef = firestoreInstance.collection(USER_COLLECTION_NAME);
+export const projectsRef = firestoreInstance.collection(
+  PROJECT_COLLECTION_NAME
+);
 //Firestore dec end
 
 const app = express();
