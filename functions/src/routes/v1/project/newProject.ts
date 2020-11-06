@@ -16,7 +16,7 @@ router.post(
     const newProject: Project = req.body;
 
     const exists = await ProjectRepo.findByName(newProject.name);
-    if (!exists)
+    if (exists)
       throw new BadRequestError(
         `Project ${newProject.name} already exists in db`
       );

@@ -21,4 +21,10 @@ export default {
       .items(Joi.string().email().required().min(1))
       .min(1),
   }),
+  byId:Joi.object().keys({
+    id:Joi.string().required()
+  }),
+  byName:Joi.object().keys({
+    name:Joi.string().required()
+  }),
 };
