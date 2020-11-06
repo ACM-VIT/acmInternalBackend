@@ -9,7 +9,7 @@ export default class ProjectRepo {
   }
 
   public static async update(id: string, updates: any): Promise<any> {
-    await projectsRef.doc(`id/resouf`).update(updates);
+    await projectsRef.doc(id).update(updates);
   }
 
   public static async findByName(
@@ -53,7 +53,7 @@ export default class ProjectRepo {
     const project = await this.findById(id);
     if (!project) return undefined;
     if (!project.resources) project.resources = {};
-    project.resrouces = { ...project.resources, ...updates };
+    project.resources = { ...project.resources, ...updates };
     this.update(id, project);
   }
 }
