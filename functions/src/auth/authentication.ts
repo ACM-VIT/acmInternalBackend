@@ -22,7 +22,7 @@ export default router.use(
       validateTokenData(payload);
 
       const user = await UserRepo.findById(payload.sub);
-      if (!user) throw new AuthFailureError('User not registered');
+      if (!user) throw new AuthFailureError('User not registered: Please Login first and check the autorisation header');
       req.user = user ;
 
       const keystore = await KeystoreRepo.findById(payload.sub);
