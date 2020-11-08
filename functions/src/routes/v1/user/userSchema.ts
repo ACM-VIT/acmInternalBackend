@@ -5,7 +5,7 @@ export default {
   new: Joi.object().keys({
     full_name: Joi.string().required(),
     email: Joi.string().email().required(),
-    department: Joi.string().required(),
+    department: Joi.string(),
     description: Joi.string(),
     personal_profiles: Joi.array(),
     projects: Joi.array(),

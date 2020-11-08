@@ -12,6 +12,7 @@ import Logger from "./core/Logger";
 import { USER_COLLECTION_NAME } from "./database/model/User";
 import { SuccessMsgResponse } from "./core/ApiResponse";
 import { PROJECT_COLLECTION_NAME } from "./database/model/Project";
+import { KEYSTORE_COLLECTION_NAME } from "./database/model/KeyStore";
 
 //Firestore dec start
 try {
@@ -29,6 +30,7 @@ export const usersRef = firestoreInstance.collection(USER_COLLECTION_NAME);
 export const projectsRef = firestoreInstance.collection(
   PROJECT_COLLECTION_NAME
 );
+export const keystoreRef = firestoreInstance.collection(KEYSTORE_COLLECTION_NAME);
 //Firestore dec end
 
 const app = express();

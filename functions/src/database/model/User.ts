@@ -3,7 +3,8 @@ import Project from "./Project";
 export default interface User {
   full_name: string;
   email: string;
-  department: string;
+  verified?:boolean,
+  department?: string;
   description?: string;
   role?: string;
   personal_profiles?: Record<string, string>;
