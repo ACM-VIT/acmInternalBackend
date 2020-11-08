@@ -4,8 +4,8 @@ import JWT, { JwtPayload } from '../core/JWT';
 import { tokenInfo } from '../config';
 
 export const getAccessToken = (authorization: string) => {
-  if (!authorization) throw new AuthFailureError('Invalid Authorization');
-  if (!authorization.startsWith('Bearer ')) throw new AuthFailureError('Invalid Authorization');
+  if (!authorization) throw new AuthFailureError('Invalid Authorization: Key must be present in req header with correct spelling');
+  if (!authorization.startsWith('Bearer ')) throw new AuthFailureError('Invalid Authorization: Include the Bearer prefix space the accesstoken');
   return authorization.split(' ')[1];
 };
 
@@ -19,7 +19,7 @@ export const validateTokenData = (payload: JwtPayload): boolean => {
     payload.iss !== tokenInfo.issuer ||
     payload.aud !== tokenInfo.audience
   )
-    throw new AuthFailureError('Invalid Access Token');
+    throw new AuthFailureError('Invalid Access Token : Token Data');
   return true;
 };
 

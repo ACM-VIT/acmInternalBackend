@@ -10,5 +10,5 @@ export default {
         personal_profiles: Joi.array(),
         projects: Joi.array(),
         accounts_connected: Joi.array(),
-      }),
+    }),
 }

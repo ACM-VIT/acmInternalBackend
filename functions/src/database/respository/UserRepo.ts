@@ -19,10 +19,11 @@ export default class UserRepo {
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res[0];
   }
-  public static async findById(id: string): Promise<FirestoreDoc | undefined> {
+  public static async findById(id: string): Promise<User | undefined> {
     const snapshot = await usersRef.doc(id).get();
     if (!snapshot.exists) return undefined;
-    return { id: snapshot.id, ...snapshot.data() };
+    const data = snapshot.data() as User;
+    return { id: snapshot.id, ...data};
   }
 
   public static async fetchAll(): Promise<FirestoreDoc[] | undefined> {

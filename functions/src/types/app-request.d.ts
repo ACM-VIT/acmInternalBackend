@@ -7,13 +7,13 @@ import Keystore from '../database/model/KeyStore';
 // }
 
 declare interface RoleRequest extends Request{
-  currentRoleCode: string;
+  currentRoleCode?: string;
 }
 
 declare interface ProtectedRequest extends RoleRequest {
-  user: User;
-  accessToken: string;
-  keystore: Keystore;
+  user?: User;
+  accessToken?: string;
+  keystore?: Keystore;
 }
 
 declare interface Tokens {

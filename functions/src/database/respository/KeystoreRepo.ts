@@ -1,4 +1,4 @@
-import {  FirestoreDocRef, keystoreRef } from "../..";
+import { FirestoreDocRef, keystoreRef } from "../..";
 import Keystore from "../model/KeyStore";
 
 
@@ -11,6 +11,12 @@ export default class KeystoreRepo {
         await createdKeystoreRef.set(keystore, { merge: true });
         return createdKeystoreRef;
     }
+    public static async findById(id: string): Promise<Keystore | undefined> {
+        const snapshot = await keystoreRef.doc(id).get();
+        if (!snapshot.exists) return undefined;
+        const data = snapshot.data() as Keystore;
+        return { id: snapshot.id, ...data };
+      }
 
     public static async find(client:FirestoreDocRef,primaryKey:string,secondaryKey:string) {
         const snapshot =await  keystoreRef.doc(client.id).get();

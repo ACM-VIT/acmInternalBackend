@@ -1,6 +1,7 @@
 import Project from "./Project";
 
 export default interface User {
+  id?:string,
   full_name: string;
   email: string;
   verified?:boolean,

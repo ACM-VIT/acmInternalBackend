@@ -25,10 +25,12 @@ router.post(
     const accessTokenKey = await crypto.randomBytes(64).toString('hex');
     const refreshTokenKey = await crypto.randomBytes(64).toString('hex');
 
-    if (!user)
+    if (!user) {
       user = await UserRepo.create(newUser);
-    else 
+      user = newUser;
+    } else {
       user = await UserRepo.findById(user.id);
+    }
 
     if(!(user?.id)) throw new InternalError(`Invalid Id of document in login of user ${user} `)
     let tokens;

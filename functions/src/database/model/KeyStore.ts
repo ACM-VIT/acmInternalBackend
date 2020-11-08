@@ -2,6 +2,7 @@
 
 
 export default interface Keystore {
+    id?:string,
     client: string;
     primaryKey: string;
     secondaryKey: string;
