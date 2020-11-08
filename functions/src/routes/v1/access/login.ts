@@ -27,7 +27,6 @@ router.post(
 
     if (!user) {
       user = await UserRepo.create(newUser);
-      user = newUser;
     } else {
       user = await UserRepo.findById(user.id);
     }

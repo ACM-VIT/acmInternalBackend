@@ -1,13 +1,13 @@
 import { usersRef } from "../../index";
-import { FirestoreDoc, FirestoreDocRef, firestoreInstance } from "../..";
+import { FirestoreDoc, firestoreInstance } from "../..";
 import User, { USER_COLLECTION_NAME } from "../model/User";
 
 export default class UserRepo {
-  public static async create(user: User): Promise<FirestoreDocRef> {
+  public static async create(user: User): Promise<FirestoreDoc> {
     const createdUserRef = usersRef.doc();
     user.verified=false;
     await createdUserRef.set(user, { merge: true });
-    return createdUserRef;
+    return createdUserRef.get();
   }
 
   public static async findByEmail(
