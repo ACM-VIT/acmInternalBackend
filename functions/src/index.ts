@@ -13,6 +13,8 @@ import { USER_COLLECTION_NAME } from "./database/model/User";
 import { SuccessMsgResponse } from "./core/ApiResponse";
 import { PROJECT_COLLECTION_NAME } from "./database/model/Project";
 import { KEYSTORE_COLLECTION_NAME } from "./database/model/KeyStore";
+import { ROLES_COLLECTION_NAME } from "./database/model/Role";
+import {populateRole} from './database'
 
 //Firestore dec start
 try {
@@ -31,6 +33,10 @@ export const projectsRef = firestoreInstance.collection(
   PROJECT_COLLECTION_NAME
 );
 export const keystoreRef = firestoreInstance.collection(KEYSTORE_COLLECTION_NAME);
+export const rolesRef = firestoreInstance.collection(ROLES_COLLECTION_NAME);
+(async ()=>{
+  await populateRole();
+})()
 //Firestore dec end
 
 const app = express();

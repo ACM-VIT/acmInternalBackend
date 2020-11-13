@@ -8,11 +8,7 @@
     "strict": true,
     "target": "es2017",
     "esModuleInterop": true,
-    "baseUrl":"*",
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    }
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src/**/*"]
 }

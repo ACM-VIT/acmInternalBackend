@@ -7,7 +7,7 @@ export default interface User {
   verified?:boolean,
   department?: string;
   description?: string;
-  role?: string;
+  roles?:Array<string> ;
   personal_profiles?: Record<string, string>;
   projects?: Array<Project>;
   accounts_connected?: Record<string, string>;

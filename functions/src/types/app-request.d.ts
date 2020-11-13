@@ -6,7 +6,7 @@ import Keystore from '../database/model/KeyStore';
 //   apiKey: string;
 // }
 
-declare interface RoleRequest extends Request{
+declare interface RoleRequest extends Request<any>{
   currentRoleCode?: string;
 }
 
