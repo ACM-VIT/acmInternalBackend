@@ -11,7 +11,9 @@ import KeystoreRepo from "../../../database/respository/KeystoreRepo";
 import { createTokens } from "../../../auth/authUtils";
 import Logger from "../../../core/Logger";
 import googleTokenVerify  from "../../../auth/googleAuthMiddlware";
-import { GoogleRequest} from "../../../types/app-request";
+import { DiscordRequest, GoogleRequest} from "../../../types/app-request";
+import discordTokenVerify from '../../../auth/discordAuthMiddleware'
+import authentication from '../../../auth/authentication'
 
 const router = express.Router();
 
@@ -115,8 +117,33 @@ router.post(
       Logger.info(err);
       throw new InternalError("error in creating tokens. Please check if they keys folder has public.pem and private.pem security rsa keys");
     }
+  })
+);
 
-  
+
+router.post(
+  "/discord",
+  authentication,
+  discordTokenVerify,
+  asyncHandler(async (req:DiscordRequest, res) => {
+    console.log("test");
+    if(!req.user) throw new BadRequestError("Invalid User/No User Please login via discord first")
+
+    const discordInfo = req.discordUser;
+    let user = await UserRepo.findByEmail(req.user.email);
+    if(!user) throw new BadRequestError("No User registered with that email");
+
+    if(!(user?.id)) throw new InternalError(`Invalid Id of document in login of user ${user} `)
+    if(!(user.accounts_connected?.discord)) {
+        await UserRepo.updateConnectedAccounts(user.id,{discord: discordInfo});
+    }
+    user = await UserRepo.findById(user.id) ;
+    if(!user) throw new InternalError("Discord Auth failed")
+    req.user = user;
+    new SuccessResponse(`Created User with id ${user.id}`, {
+        id: user.id,
+        user,
+     }).send(res);
   })
 );
 

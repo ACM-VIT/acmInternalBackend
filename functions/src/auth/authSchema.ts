@@ -6,4 +6,9 @@ export default {
       authorization: Joi.string().required(),
     })
     .unknown(true),
+    discordAuth: Joi.object()
+    .keys({
+      discord_token:Joi.string().required(),
+    })
+    .unknown(true),
 }

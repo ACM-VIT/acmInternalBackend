@@ -21,6 +21,12 @@ declare interface GoogleRequest extends Request {
   accessToken?:string,
   user?:any;
 }
+declare interface DiscordRequest extends Request {
+  accessToken?:string,
+  discordToken?:string,
+  discordUser?:string,
+  user?:any;
+}
 
 declare interface Tokens {
   accessToken: string;

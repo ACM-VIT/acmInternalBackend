@@ -19,6 +19,9 @@ router.delete(
       asyncHandler(async (req: ProtectedRequest, res) => {
         if(!req.keystore) throw new BadRequestError("No keystore in the request object. Please login first.")
         await KeystoreRepo.delete(req.keystore.client);
+        delete req.user;
+        delete req.accessToken;
+        delete req.keystore;
         new SuccessMsgResponse('Logout success').send(res);
       }),
 )

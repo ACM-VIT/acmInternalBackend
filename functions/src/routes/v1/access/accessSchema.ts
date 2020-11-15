@@ -16,5 +16,8 @@ export default {
       authorization: Joi.string().required(),
     })
     .unknown(true),
+    byEmail:Joi.object().keys({
+      email:Joi.string().email().required()
+    }),
 
 }
