@@ -3,16 +3,17 @@ import { FirestoreDoc, firestoreInstance } from "../..";
 import User, { USER_COLLECTION_NAME } from "../model/User";
 
 export default class UserRepo {
-  public static async create(user: User): Promise<FirestoreDoc> {
+  public static async create(user: User): Promise<User> {
     const createdUserRef = usersRef.doc();
     user.verified=false;
     await createdUserRef.set(user, { merge: true });
-    return createdUserRef.get();
+    const newUser = await (await createdUserRef.get()).data() as User;
+    return {...newUser,id:createdUserRef.id};
   }
 
   public static async findByEmail(
     email: string
-  ): Promise<FirestoreDoc | undefined> {
+  ): Promise<User | undefined> {
     const snapshot = await usersRef.where("email", "==", email).get();
     if (snapshot.empty) return undefined;
     const res: any = [];
@@ -57,6 +58,16 @@ export default class UserRepo {
     if (!user) return undefined;
     if (!user.personal_profiles) user.personal_profiles = {};
     user.personal_profiles = { ...user.personal_profiles, ...updates };
+    this.update(id, user);
+  }
+  public static async updateConnectedAccounts(
+    id: string,
+    updates: any
+  ): Promise<any> {
+    const user = await this.findById(id);
+    if (!user) return undefined;
+    if (!user.accounts_connected) user.accounts_connected = {};
+    user.accounts_connected = { ...user.accounts_connected, ...updates };
     this.update(id, user);
   }
 }

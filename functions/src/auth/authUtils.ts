@@ -1,6 +1,6 @@
 import { Tokens } from '../types/app-request';
 import { AuthFailureError, InternalError } from '../core/ApiError';
-import JWT, { JwtPayload } from '../core/JWT';
+import JWT, { GooglePayload, JwtPayload } from '../core/JWT';
 import { tokenInfo } from '../config';
 
 export const getAccessToken = (authorization: string) => {
@@ -20,6 +20,23 @@ export const validateTokenData = (payload: JwtPayload): boolean => {
     payload.aud !== tokenInfo.audience
   )
     throw new AuthFailureError('Invalid Access Token : Token Data');
+  return true;
+};
+
+
+
+
+export const validateGoogleTokenData = (payload: GooglePayload): boolean => {
+  if (
+    !payload ||
+    !payload.iss ||
+    !payload.sub ||
+    !payload.aud ||
+    !payload.email ||
+    payload.iss !== "https://securetoken.google.com" ||
+    payload.aud !== "acminternal"
+  )
+    throw new AuthFailureError('Invalid Google Access Token : Token Data');
   return true;
 };
 

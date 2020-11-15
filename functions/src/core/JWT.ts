@@ -77,3 +77,21 @@ export class JwtPayload {
     this.prm = param;
   }
 }
+export class GooglePayload {
+  aud: string;
+  sub: string;
+  iss: string;
+  iat: number;
+  exp: number;
+  email: string;
+
+  constructor(issuer: string, audience: string, subject: string, email: string, validity: number) {
+    this.iss = issuer;
+    this.aud = audience;
+    this.sub = subject;
+    this.iat = Math.floor(Date.now() / 1000);
+    this.exp = this.iat + validity * 24 * 60 * 60;
+    this.email = email;
+  }
+}
+

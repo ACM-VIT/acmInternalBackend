@@ -16,6 +16,12 @@ declare interface ProtectedRequest extends RoleRequest {
   keystore?: Keystore;
 }
 
+declare interface GoogleRequest extends Request {
+  googleId?:string
+  accessToken?:string,
+  user?:any;
+}
+
 declare interface Tokens {
   accessToken: string;
   refreshToken: string;

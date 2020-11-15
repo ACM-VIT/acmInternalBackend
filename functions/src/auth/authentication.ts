@@ -1,13 +1,14 @@
 import express from 'express';
-import { ProtectedRequest } from '../types/app-request';
+import { ProtectedRequest} from '../types/app-request';
 import UserRepo from '../database/respository/UserRepo';
 import { AuthFailureError, AccessTokenError, TokenExpiredError } from '../core/ApiError';
 import JWT from '../core/JWT';
 import KeystoreRepo from '../database/respository/KeystoreRepo';
-import { getAccessToken, validateTokenData } from './authUtils';
+import { getAccessToken,validateTokenData } from './authUtils';
 import validator, { ValidationSource } from '../helpers/validator';
 import asyncHandler from '../helpers/asyncHandler';
 import authSchema from './authSchema';
+
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ export default router.use(
   asyncHandler(async (req: ProtectedRequest, res, next) => {
     if(!req.headers.authorization) throw new AuthFailureError("No Auth Token in Request Header");
     req.accessToken = getAccessToken(req.headers.authorization); // Express headers are auto converted to lowercase
-
+    console.log("test middlwre");
     try {
       const payload = await JWT.validate(req.accessToken);
       validateTokenData(payload);
@@ -36,3 +37,4 @@ export default router.use(
     }
   }),
 );
+
