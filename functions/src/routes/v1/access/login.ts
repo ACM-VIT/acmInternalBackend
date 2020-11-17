@@ -77,24 +77,28 @@ router.post(
     */
     const  googleInfo = req.user;
     let user = await UserRepo.findByEmail(req.user.email);
-
+    console.log(req.user);
 
     const accessTokenKey = await crypto.randomBytes(64).toString('hex');
     const refreshTokenKey = await crypto.randomBytes(64).toString('hex');
+    console.log("gen all tokens");
 
     if (!user) {
       user = await UserRepo.create({
         full_name: req.user.name as string,
         email:req.user.email as string
       });
+      console.log("first time user intial creation");
     } else if(user.id){
       user = await UserRepo.findById(user.id);
+      console.log("second time use intial creation");
     } else {
       throw new InternalError("Unable to find the user id: Internal Error login.ts ln 33")
     }
     if(!(user?.id)) throw new InternalError(`Invalid Id of document in login of user ${user} `)
     if(!(user.accounts_connected?.google)) {
         await UserRepo.updateConnectedAccounts(user.id,{google: googleInfo});
+        console.log("sucessfull update of accoutnts");
     }
     user = await UserRepo.findById(user.id) ;
     if(!user)
