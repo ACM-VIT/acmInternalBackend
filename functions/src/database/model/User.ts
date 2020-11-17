@@ -11,6 +11,7 @@ export default interface User {
   personal_profiles?: Record<string, string>;
   projects?: Array<Project>;
   accounts_connected?: Record<string, string>;
+  discord_username?:string;
 }
 
 export const USER_COLLECTION_NAME = "Users";

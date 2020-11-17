@@ -66,6 +66,7 @@ export default class UserRepo {
   ): Promise<any> {
     const user = await this.findById(id);
     if (!user) return undefined;
+    if(!user.discord_username && updates.discord.username) user.discord_username = updates.discord.username;
     if (!user.accounts_connected) user.accounts_connected = {};
     user.accounts_connected = { ...user.accounts_connected, ...updates };
     this.update(id, user);
