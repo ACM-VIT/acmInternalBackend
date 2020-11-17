@@ -22,6 +22,8 @@ export default {
     personal_profiles: Joi.array(),
     projects: Joi.array(),
     accounts_connected: Joi.array(),
+    expo_token:Joi.string(),
+    fcm_token:Joi.string()
   }),
   byId: Joi.object().keys({
     id: JoiFirebaseId(), //isrequired
