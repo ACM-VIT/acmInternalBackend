@@ -78,13 +78,22 @@ export const SubscribeUserToTopics = functions.firestore.document('Users/{userId
   // e.g. {'name': 'Marie', 'age': 66}
   const newValue = change.after.data();
 
- console.log("Id: " + context.params.userId)
+   console.log("Id: " + context.params.userId)
   // access a particular field as you would any JS property
-  if(!newValue.fcm_token) return;
-  const fcm_token = newValue.fcm_token;
-  console.log("fcm_token: ",fcm_token);
-  // perform desired operations ...
-
+  if(newValue.fcm_token) {
+    const fcm_token = newValue.fcm_token;
+    console.log("fcm_token: ",fcm_token);
+    // perform desired operations ...
+    admin.messaging().subscribeToTopic(fcm_token, "projects")
+    .then(function(response) {
+      // See the MessagingTopicManagementResponse reference documentation
+      // for the contents of response.
+      console.log('Successfully subscribed to topic:', response);
+    })
+    .catch(function(error) {
+      console.log('Error subscribing to topic:', error);
+    });
+  }
   return null;
 });
 
