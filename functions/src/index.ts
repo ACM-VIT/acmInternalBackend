@@ -73,15 +73,18 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 export const App = functions.https.onRequest(app);
-export const SubscribeUserToTopics = functions.firestore.document('users/{userId}').onUpdate((change, context) => {
+export const SubscribeUserToTopics = functions.firestore.document('Users/{userId}').onUpdate((change, context) => {
   // Get an object representing the document
   // e.g. {'name': 'Marie', 'age': 66}
   const newValue = change.after.data();
 
+ console.log("Id: " + context.params.userId)
   // access a particular field as you would any JS property
   if(!newValue.fcm_token) return;
   const fcm_token = newValue.fcm_token;
-  console.log(fcm_token);
+  console.log("fcm_token: ",fcm_token);
   // perform desired operations ...
+
+  return null;
 });
 
