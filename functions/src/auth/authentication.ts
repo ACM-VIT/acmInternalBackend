@@ -32,7 +32,7 @@ export default router.use(
 
       return next();
     } catch (e) {
-      if (e instanceof TokenExpiredError) throw new AccessTokenError(e.message);
+      if (e instanceof TokenExpiredError) throw new AccessTokenError("Token Expired: " + e.message);
       throw e;
     }
   }),

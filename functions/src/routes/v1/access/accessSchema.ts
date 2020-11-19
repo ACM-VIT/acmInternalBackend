@@ -19,5 +19,8 @@ export default {
     byEmail:Joi.object().keys({
       email:Joi.string().email().required()
     }),
+    refreshToken: Joi.object().keys({
+      refreshToken: Joi.string().required().min(1),
+    }),
 
 }

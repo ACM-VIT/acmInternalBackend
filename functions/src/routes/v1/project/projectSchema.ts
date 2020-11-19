@@ -13,6 +13,7 @@ export default {
     name: Joi.string().required().min(1),
     desc: Joi.string().required().min(1),
     wanted: Joi.array().items(Joi.string().required().min(1)).min(1),
+    founder:Joi.string().required(),
     resources: Joi.object().min(1).pattern(/\w/, Joi.string().uri()), //minimum one key;
     status: Joi.any()
       .required()

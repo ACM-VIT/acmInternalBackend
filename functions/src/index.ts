@@ -34,6 +34,7 @@ export const projectsRef = firestoreInstance.collection(
 );
 export const keystoreRef = firestoreInstance.collection(KEYSTORE_COLLECTION_NAME);
 export const rolesRef = firestoreInstance.collection(ROLES_COLLECTION_NAME);
+export const PROJECT_FCM_TOPIC="projects";
 (async ()=>{
   await populateRole();
 })()
@@ -84,7 +85,7 @@ export const SubscribeUserToTopics = functions.firestore.document('Users/{userId
     const fcm_token = newValue.fcm_token;
     console.log("fcm_token: ",fcm_token);
     // perform desired operations ...
-    admin.messaging().subscribeToTopic(fcm_token, "projects")
+    admin.messaging().subscribeToTopic(fcm_token,PROJECT_FCM_TOPIC)
     .then(function(response) {
       // See the MessagingTopicManagementResponse reference documentation
       // for the contents of response.
@@ -94,6 +95,35 @@ export const SubscribeUserToTopics = functions.firestore.document('Users/{userId
       console.log('Error subscribing to topic:', error);
     });
   }
+  return null;
+});
+export const NotifyNewProject = functions.firestore.document('Projects/{projectId}').onCreate((snap, context) => {
+    const newProject = snap.data();
+    console.log(newProject, 'written by', context.params.projectId);
+    if(!newProject.name || typeof(newProject.name) != "string") {
+      console.log("projet name not valid i.e not exists or is not a string");
+      return;
+    }
+    if(!newProject.desc || typeof(newProject.desc) != "string") {
+      console.log("projet name not valid i.e not exists or is not a string");
+      return;
+    }
+  const notification= {
+    data: {
+      title: newProject.name,
+      body: newProject.desc,
+      data: JSON.stringify(newProject),
+    },
+  };
+  admin.messaging().sendToTopic(PROJECT_FCM_TOPIC,notification)
+  .then((response) => {
+    // Response is a message ID string.
+    console.log('Successfully sent message:', response);
+  })
+  .catch((error) => {
+    console.log('Error sending message:', error);
+  });
+
   return null;
 });
 

@@ -1,20 +1,23 @@
 import asyncHandler from "../../../helpers/asyncHandler";
 import express from "express";
-import validator, { ValidationSource } from "../../../helpers/validator";
+import validator from "../../../helpers/validator";
 import userSchema from "./userSchema";
 import UserRepo from "../../../database/respository/UserRepo";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessMsgResponse, SuccessResponse } from "../../../core/ApiResponse";
 import Logger from "../../../core/Logger";
+import authentication from "../../../auth/authentication";
+import { ProtectedRequest } from "../../../types/app-request";
 
 const router = express.Router();
 
 router.put(
-  "/:id",
-  validator(userSchema.byId, ValidationSource.PARAM),
+  "/",
+  authentication,
   validator(userSchema.update),
-  asyncHandler(async (req, res) => {
-    const docId = req.params.id;
+  asyncHandler(async (req:ProtectedRequest, res) => {
+    const docId = req.user?.id;
+    if(!docId) throw new BadRequestError("Middle ware failed to parse token and get user id");
     const user = await UserRepo.findById(docId);
     if (!user)
       throw new BadRequestError(`User with id ${docId} does not exist`);
@@ -32,10 +35,13 @@ router.put(
 );
 
 router.put(
-  "/personalProfileLinks/:id",
+  "/personalProfileLinks",
+  authentication,
   validator(userSchema.updatePersonalProfiles),
-  asyncHandler(async (req, res) => {
-    const docId = req.params.id;
+  asyncHandler(async (req:ProtectedRequest, res) => {
+    const docId = req.user?.id;
+    if(!docId) throw new BadRequestError("Middle ware failed to parse token and get user id");
+
 
     const user = await UserRepo.findById(docId);
     if (!user)

@@ -11,6 +11,7 @@ export default interface Project {
   resources?: Record<string, string>;
   status: ProjectStatus;
   teamMembers?: Array<string>;
+  founder?:string
 }
 
 export const PROJECT_COLLECTION_NAME = "Projects";

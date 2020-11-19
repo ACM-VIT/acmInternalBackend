@@ -1,5 +1,6 @@
 import { FirestoreDocRef, keystoreRef } from "../..";
 import Keystore from "../model/KeyStore";
+import User from "../model/User";
 
 
 export default class KeystoreRepo {
@@ -18,8 +19,8 @@ export default class KeystoreRepo {
         return { id: snapshot.id, ...data };
       }
 
-    public static async find(client:FirestoreDocRef,primaryKey:string,secondaryKey:string) {
-        const snapshot =await  keystoreRef.doc(client.id).get();
+    public static async find(client:User,primaryKey:string,secondaryKey:string) {
+        const snapshot =await  keystoreRef.doc(client.id as string).get();
         if (!snapshot.exists) return undefined;
         return { id: snapshot.id, ...snapshot.data() };
     }

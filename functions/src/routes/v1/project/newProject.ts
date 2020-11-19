@@ -6,6 +6,7 @@ import Project from "../../../database/model/Project";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
+import UserRepo from "../../../database/respository/UserRepo";
 
 const router = express.Router();
 
@@ -20,6 +21,8 @@ router.post(
       throw new BadRequestError(
         `Project ${newProject.name} already exists in db`
       );
+    const founder = await UserRepo.findById(newProject.founder as string)
+    if(!founder) throw new BadRequestError("Founder field does not contain valid user");
 
     const createdProject = await ProjectRepo.create(newProject);
     if (!createdProject)
