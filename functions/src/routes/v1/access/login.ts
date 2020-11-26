@@ -86,8 +86,9 @@ router.post(
     if (!user) {
       user = await UserRepo.create({
         full_name: req.user.name as string,
-        email:req.user.email as string
-      });
+        email:req.user.email as string,
+        profilePic: req.user.profilePic as string
+      } as User);
       console.log("first time user intial creation");
     } else if(user.id){
       user = await UserRepo.findById(user.id);
