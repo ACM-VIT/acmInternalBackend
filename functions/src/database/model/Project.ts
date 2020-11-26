@@ -1,3 +1,5 @@
+import User from "./User";
+
 export enum ProjectStatus {
   IDEATION = "ideation",
   REVIEW = "review",
@@ -11,7 +13,7 @@ export default interface Project {
   resources?: Record<string, string>;
   status: ProjectStatus;
   teamMembers?: Array<string>;
-  founder?:string
+  founder?:User
 }
 
 export const PROJECT_COLLECTION_NAME = "Projects";

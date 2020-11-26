@@ -6,13 +6,14 @@ import ProjectRepo from "../../../database/respository/ProjectRepo";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
 import Logger from "../../../core/Logger";
+import authentication from "../../../auth/authentication";
 
 const router = express.Router();
 
 router.get(
     "/all",
+  authentication,
   asyncHandler(async (req,res)=>{
-
         const allProjects = await ProjectRepo.fetchAll();
         if(!allProjects) throw new InternalError(`No projects retrieved in db`);
 
@@ -25,6 +26,7 @@ router.get(
 
 router.get(
     "/byId/:id",
+    authentication,
     validator(projectSchema.byId,ValidationSource.PARAM),
     asyncHandler(async (req,res)=>{
         const docId=req.params.id;
@@ -40,6 +42,7 @@ router.get(
 
 router.get(
     "/byName/:name",
+    authentication,
     asyncHandler(async (req,res)=>{
         const projectName=req.params.name;
         Logger.info(projectName);

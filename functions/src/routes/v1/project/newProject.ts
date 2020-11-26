@@ -19,7 +19,7 @@ router.post(
     const newProject: Project = req.body;
     const docId = req.user?.id;
     if(!docId) throw new BadRequestError("Middle ware failed to parse token and get user id or ");
-    newProject.founder = docId;
+    newProject.founder = req.user;
     newProject.status = ProjectStatus.IDEATION;
     const exists = await ProjectRepo.findByName(newProject.name);
     if (exists)
