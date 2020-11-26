@@ -115,7 +115,6 @@ export const NotifyNewProject = functions.firestore.document('Projects/{projectI
       message: newProject.desc,
       body:JSON.stringify(newProject)
     },
-    priority:"high",
     topic:PROJECT_FCM_TOPIC,
   } as admin.messaging.Message;
   admin.messaging().send(notification)
