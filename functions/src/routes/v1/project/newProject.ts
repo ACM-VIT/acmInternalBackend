@@ -6,7 +6,6 @@ import Project from "../../../database/model/Project";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
-import UserRepo from "../../../database/respository/UserRepo";
 import authentication from "../../../auth/authentication";
 import { ProtectedRequest } from "../../../types/app-request";
 
