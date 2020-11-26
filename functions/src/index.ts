@@ -109,7 +109,6 @@ export const NotifyNewProject = functions.firestore.document('Projects/{projectI
       return;
     }
   const notification= {
-    priority: "high",
     data: {
       experienceId: "@madrigal1/acminternalapprn",
       title: newProject.name,
