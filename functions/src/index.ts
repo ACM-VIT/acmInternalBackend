@@ -115,8 +115,10 @@ export const NotifyNewProject = functions.firestore.document('Projects/{projectI
       message: newProject.desc,
       body:JSON.stringify(newProject)
     },
-  } as admin.messaging.MessagingPayload;
-  admin.messaging().sendToTopic(PROJECT_FCM_TOPIC,notification)
+    priority:"high",
+    topic:PROJECT_FCM_TOPIC,
+  } as admin.messaging.Message;
+  admin.messaging().send(notification)
   .then((response) => {
     // Response is a message ID string.
     console.log('Successfully sent message:', response);
