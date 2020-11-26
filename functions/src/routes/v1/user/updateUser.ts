@@ -26,7 +26,7 @@ router.put(
       await UserRepo.update(docId, req.body);
       const updatedUser = await UserRepo.findById(docId);
       new SuccessResponse(`Sucessfully updated user of id ${docId}`, {
-        updatedUser,
+        user:updatedUser,
       }).send(res);
     } catch (err) {
       throw new InternalError("Unable to update user");
