@@ -109,12 +109,14 @@ export const NotifyNewProject = functions.firestore.document('Projects/{projectI
       return;
     }
   const notification= {
+    priority: "high",
     data: {
+      experienceId: "@madrigal1/acminternalapprn",
       title: newProject.name,
-      body: newProject.desc,
-      data: JSON.stringify(newProject),
+      message: newProject.desc,
+      body:JSON.stringify(newProject)
     },
-  };
+  } as admin.messaging.MessagingPayload;
   admin.messaging().sendToTopic(PROJECT_FCM_TOPIC,notification)
   .then((response) => {
     // Response is a message ID string.

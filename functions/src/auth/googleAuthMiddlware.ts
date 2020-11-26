@@ -6,9 +6,9 @@ import { GoogleRequest } from "../types/app-request";
 import {  AuthFailureError, InternalError,  } from "../core/ApiError";
 import { getAccessToken } from "./authUtils";
 import Logger from "../core/Logger";
-import { googleClientId_reactnative,googleClientId_android } from "../config";
+import { googleClientId_reactnative_dev,googleClientId_android, googleClientId_reactnative_prod } from "../config";
 import { OAuth2Client } from 'google-auth-library';
-const client = new OAuth2Client( googleClientId_reactnative, '', '' );
+const client = new OAuth2Client( googleClientId_reactnative_dev, '', '' );
 
 const router= express.Router();
 
@@ -19,7 +19,7 @@ export default router.use(
         if(!req.headers.authorization) throw new AuthFailureError("No Auth Token in Request Header");
         req.accessToken = getAccessToken(req.headers.authorization as string);
         console.log("got id token ")
-        const login = await client.verifyIdToken( { idToken: req.accessToken as string, audience: [googleClientId_android,googleClientId_reactnative] } )
+        const login = await client.verifyIdToken( { idToken: req.accessToken as string, audience: [googleClientId_android,googleClientId_reactnative_dev,googleClientId_reactnative_prod] } )
         console.log("token verified");
         var payload = login.getPayload();
         console.log("payload done");
@@ -28,8 +28,8 @@ export default router.use(
         var userid = payload['sub'];
         console.log("audience start")
         var audience = payload.aud;
-        if (audience !== googleClientId_reactnative && audience !== googleClientId_android) {
-            throw new InternalError( `error while authenticating google user: audience mismatch: wanted [${googleClientId_reactnative}/${googleClientId_android}] but was ${audience} instead`);
+        if (audience !== googleClientId_reactnative_dev && audience !== googleClientId_reactnative_prod && audience !== googleClientId_android) {
+            throw new InternalError( `error while authenticating google user: audience mismatch: wanted [${googleClientId_reactnative_dev}/${googleClientId_android}/${googleClientId_reactnative_prod}] but was ${audience} instead`);
         }
         const userInfo = {
                 name: payload['name'], //profile name
