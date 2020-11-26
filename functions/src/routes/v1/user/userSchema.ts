@@ -10,6 +10,7 @@ export default {
     personal_profiles: Joi.array(),
     projects: Joi.array(),
     accounts_connected: Joi.array(),
+    profilePic:Joi.string().uri(),
   }),
   findByEmail: Joi.object().keys({
     email: Joi.string().email().required(),
@@ -23,7 +24,8 @@ export default {
     projects: Joi.array(),
     accounts_connected: Joi.array(),
     expo_token:Joi.string(),
-    fcm_token:Joi.string()
+    fcm_token:Joi.string(),
+    profilePic:Joi.string().uri(),
   }),
   byId: Joi.object().keys({
     id: JoiFirebaseId(), //isrequired
