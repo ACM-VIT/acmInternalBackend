@@ -2,7 +2,7 @@ import asyncHandler from "../../../helpers/asyncHandler";
 import express from "express";
 import validator from "../../../helpers/validator";
 import projectSchema from "./projectSchema";
-import Project from "../../../database/model/Project";
+import Project, { ProjectStatus } from "../../../database/model/Project";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
@@ -20,7 +20,7 @@ router.post(
     const docId = req.user?.id;
     if(!docId) throw new BadRequestError("Middle ware failed to parse token and get user id or ");
     newProject.founder = docId;
-
+    newProject.status = ProjectStatus.IDEATION;
     const exists = await ProjectRepo.findByName(newProject.name);
     if (exists)
       throw new BadRequestError(
