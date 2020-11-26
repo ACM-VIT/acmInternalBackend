@@ -7,22 +7,26 @@ import ProjectRepo from "../../../database/respository/ProjectRepo";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
 import UserRepo from "../../../database/respository/UserRepo";
+import authentication from "../../../auth/authentication";
+import { ProtectedRequest } from "../../../types/app-request";
 
 const router = express.Router();
 
 router.post(
   "/",
+  authentication,
   validator(projectSchema.new),
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req:ProtectedRequest, res) => {
     const newProject: Project = req.body;
+    const docId = req.user?.id;
+    if(!docId) throw new BadRequestError("Middle ware failed to parse token and get user id or ");
+    newProject.founder = docId;
 
     const exists = await ProjectRepo.findByName(newProject.name);
     if (exists)
       throw new BadRequestError(
         `Project ${newProject.name} already exists in db`
       );
-    const founder = await UserRepo.findById(newProject.founder as string)
-    if(!founder) throw new BadRequestError("Founder field does not contain valid user");
 
     const createdProject = await ProjectRepo.create(newProject);
     if (!createdProject)
