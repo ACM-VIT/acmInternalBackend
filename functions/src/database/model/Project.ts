@@ -9,6 +9,8 @@ export enum ProjectStatus {
 export default interface Project {
   name: string;
   desc?: string;
+  tags?:string[];
+  image?:string;
   wanted?: Array<string>;
   resources?: Record<string, string>;
   status: ProjectStatus;

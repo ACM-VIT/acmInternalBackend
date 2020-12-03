@@ -12,6 +12,8 @@ export default {
   new: Joi.object().keys({
     name: Joi.string().required().min(1),
     desc: Joi.string().required().min(1),
+    image:Joi.string().min(1),
+    tags:Joi.array().items(Joi.string()),
     wanted: Joi.array().items(Joi.string().required().min(1)).min(1),
     resources: Joi.object().min(1).pattern(/\w/, Joi.string().uri()), //minimum one key;
     status: Joi.any()
