@@ -5,8 +5,11 @@ import { BadRequestError, InternalError } from "../../../core/ApiError";
 import validator, { ValidationSource } from "../../../helpers/validator";
 import projectSchema from "./projectSchema";
 import { SuccessMsgResponse } from "../../../core/ApiResponse";
+import authentication from "../../../auth/authentication";
 
 const router = express.Router();
+
+router.use("/",authentication);
 
 router.delete(
     "/:id",

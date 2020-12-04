@@ -5,9 +5,12 @@ import projectSchema from "./projectSchema";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
+import authentication from "../../../auth/authentication";
 
 
 const router = express.Router();
+
+router.use("/",authentication);
 
 router.put(
     "/byId/:id",

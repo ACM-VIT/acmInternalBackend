@@ -5,8 +5,12 @@ import UserRepo from "../../../database/respository/UserRepo";
 import { BadRequestError } from "../../../core/ApiError";
 import validator, { ValidationSource } from "../../../helpers/validator";
 import userSchema from "./userSchema";
+import authentication from '../../../auth/authentication'
 
 const router = express.Router();
+
+
+router.use("/",authentication);
 
 router.get(
   "/all",

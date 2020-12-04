@@ -11,9 +11,10 @@ import { ProtectedRequest } from "../../../types/app-request";
 
 const router = express.Router();
 
+router.use("/",authentication);
+
 router.put(
   "/",
-  authentication,
   validator(userSchema.update),
   asyncHandler(async (req:ProtectedRequest, res) => {
     const docId = req.user?.id;
@@ -36,7 +37,6 @@ router.put(
 
 router.put(
   "/personalProfileLinks",
-  authentication,
   validator(userSchema.updatePersonalProfiles),
   asyncHandler(async (req:ProtectedRequest, res) => {
     const docId = req.user?.id;

@@ -5,8 +5,11 @@ import userSchema from "./userSchema";
 import UserRepo from "../../../database/respository/UserRepo";
 import { SuccessMsgResponse } from "../../../core/ApiResponse";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
+import authentication from "../../../auth/authentication";
 
 const router = express.Router();
+
+router.use("/",authentication);
 
 router.delete(
   "/:id",
