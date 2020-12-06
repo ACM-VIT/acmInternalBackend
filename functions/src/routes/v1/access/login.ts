@@ -142,12 +142,12 @@ router.post(
     if(!(user.accounts_connected?.discord)) {
         await UserRepo.updateConnectedAccounts(user.id,{discord: discordInfo});
     }
-    user = await UserRepo.findById(user.id) ;
-    if(!user) throw new InternalError("Discord Auth failed")
-    req.user = user;
+    let updatedUser = await UserRepo.findById(user.id) ;
+    if(!updatedUser) throw new InternalError("Discord Auth failed")
+    req.user = updatedUser;
     new SuccessResponse(`Created User with id ${user.id}`, {
         id: user.id,
-        user,
+        user:updatedUser,
      }).send(res);
   })
 );

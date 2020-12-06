@@ -47,7 +47,7 @@ export default class UserRepo {
   }
 
   public static async update(id: string, updates: any): Promise<any> {
-    await usersRef.doc(id).update(updates);
+    return usersRef.doc(id).update(updates);
   }
 
   public static async updatePersonalLinks(
@@ -58,7 +58,7 @@ export default class UserRepo {
     if (!user) return undefined;
     if (!user.personal_profiles) user.personal_profiles = {};
     user.personal_profiles = { ...user.personal_profiles, ...updates };
-    this.update(id, user);
+    return this.update(id, user);
   }
   public static async updateConnectedAccounts(
     id: string,
@@ -69,6 +69,6 @@ export default class UserRepo {
     if(!user.discord_username && !!updates.discord?.username) user.discord_username = updates.discord.username;
     if (!user.accounts_connected) user.accounts_connected = {};
     user.accounts_connected = { ...user.accounts_connected, ...updates };
-    this.update(id, user);
+    return this.update(id, user);
   }
 }
