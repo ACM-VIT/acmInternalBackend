@@ -14,11 +14,13 @@ const router = express.Router();
 
 router.use("/",authentication);
 
+//the access token is used to populate req.user with id 
+
 router.put(
   "/",
   validator(userSchema.update),
   asyncHandler(async (req:ProtectedRequest, res) => {
-    const docId = req.user?.id;
+    const docId = req.user?.id; 
     if(!docId) throw new BadRequestError("Middle ware failed to parse token and get user id");
     const user = await UserRepo.findById(docId);
     if (!user)

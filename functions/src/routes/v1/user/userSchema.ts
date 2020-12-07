@@ -26,6 +26,7 @@ export default {
     expo_token:Joi.string(),
     fcm_token:Joi.string(),
     profilePic:Joi.string().uri(),
+    pwd:Joi.string(),
   }),
   byId: Joi.object().keys({
     id: JoiFirebaseId(), //isrequired
