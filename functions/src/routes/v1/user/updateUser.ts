@@ -8,6 +8,7 @@ import { SuccessMsgResponse, SuccessResponse } from "../../../core/ApiResponse";
 import Logger from "../../../core/Logger";
 import authentication from "../../../auth/authentication";
 import { ProtectedRequest } from "../../../types/app-request";
+import bcrypt from 'bcryptjs'
 
 const router = express.Router();
 
@@ -22,6 +23,11 @@ router.put(
     const user = await UserRepo.findById(docId);
     if (!user)
       throw new BadRequestError(`User with id ${docId} does not exist`);
+    if(req.body.pwd) {
+      const salt = await bcrypt.genSaltSync(10);
+      const hashedPwd = await bcrypt.hashSync(req.body.pwd,salt);
+      req.body.pwd = hashedPwd;
+    }
 
     try {
       await UserRepo.update(docId, req.body);

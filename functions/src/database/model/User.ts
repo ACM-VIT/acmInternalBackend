@@ -13,6 +13,7 @@ export default interface User {
   projects?: Array<Project>;
   accounts_connected?: Record<string, string>;
   discord_username?:string;
+  pwd?:string;
 }
 
 export const USER_COLLECTION_NAME = "Users";

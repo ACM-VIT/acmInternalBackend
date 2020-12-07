@@ -11,6 +11,10 @@ export default {
         projects: Joi.array(),
         accounts_connected: Joi.array(),
     }),
+    loginByPwd:Joi.object().keys({
+      email:Joi.string().email().required(),
+      pwd:Joi.string().required(),
+    }),
     auth: Joi.object()
     .keys({
       authorization: Joi.string().required(),

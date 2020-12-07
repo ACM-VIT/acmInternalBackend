@@ -5,7 +5,7 @@ import validator from "../../../helpers/validator";
 import accessSchema from "./accessSchema";
 import UserRepo from "../../../database/respository/UserRepo";
 import User from "../../../database/model/User";
-import {  BadRequestError, InternalError } from "../../../core/ApiError";
+import {  AuthFailureError, BadRequestError, InternalError } from "../../../core/ApiError";
 import crypto from 'crypto'
 import KeystoreRepo from "../../../database/respository/KeystoreRepo";
 import { createTokens } from "../../../auth/authUtils";
@@ -14,23 +14,36 @@ import googleTokenVerify  from "../../../auth/googleAuthMiddlware";
 import { DiscordRequest, GoogleRequest} from "../../../types/app-request";
 import discordTokenVerify from '../../../auth/discordAuthMiddleware'
 import authentication from '../../../auth/authentication'
-
+import bcrypt from 'bcryptjs'
 const router = express.Router();
+
+interface loginByPwd {
+  email:string,
+  pwd:string;
+}
 
 router.post(
   "/basic",
-  validator(accessSchema.login),
+  validator(accessSchema.loginByPwd),
   asyncHandler(async (req, res) => {
-    const newUser: User = req.body;
+    const loginUser:loginByPwd  = {
+      email:req.body.email,
+      pwd:req.body.pwd
+    };
 
-    let user = await UserRepo.findByEmail(newUser.email);
+    let user = await UserRepo.findByEmail(loginUser.email);
+    if (!user?.pwd) throw new BadRequestError('Credential not set');
+
+    const match = await bcrypt.compare(req.body.pwd, user.pwd);
+    if (!match) throw new AuthFailureError('Authentication failure: password is incorrect');
+
   
     
     const accessTokenKey = await crypto.randomBytes(64).toString('hex');
     const refreshTokenKey = await crypto.randomBytes(64).toString('hex');
 
     if (!user) {
-      user = await UserRepo.create(newUser);
+      throw new BadRequestError(`No user registered with email ${req.body.email}`)
     } else if(user.id){
       user = await UserRepo.findById(user.id);
     } else {
