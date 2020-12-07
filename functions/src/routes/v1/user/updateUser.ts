@@ -14,7 +14,18 @@ const router = express.Router();
 
 router.use("/",authentication);
 
-//the access token is used to populate req.user with id 
+/*
+note
+
+note author:Gokul J Kurup
+
+
+The access token is used to populate req.user with user info 
+check out the autheication middleware
+
+always remember to add the protested req type in 
+
+*/
 
 router.put(
   "/",
