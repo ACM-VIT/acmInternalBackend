@@ -16,7 +16,7 @@ export default router.use(
     try {
         if(!req.headers.discord_token) throw new AuthFailureError("No Discord Auth Token in Request Header");
         req.discordToken = getAccessToken(req.headers.discord_token as string);
-        console.log("got discord id token ")
+        console.log("got discord id token ",req.discordToken);
         let discordUrl="https://discordapp.com/api/v6/users/@me";
         const login = await fetch(discordUrl,{
             headers:{
