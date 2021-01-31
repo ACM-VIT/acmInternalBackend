@@ -25,25 +25,26 @@ router.put(
 
         try {
             const user = req.user;
-            delete user["accounts_connected"];
-            delete user["projects"]
             await ProjectRepo.joinProject(projectId,user);
+        }catch(err) {
+            throw new InternalError(`failed to update the projet with  new team memeber: ${err}`);
+        }
            
             const newProject = await ProjectRepo.findById(projectId);
             if(!newProject) throw new BadRequestError(`Project not able to be updated with id: ${projectId}`);
-
-            await UserRepo.updateProjects(req.user.id,{
-                id:projectId,
-                name:newProject.name,
-                status:newProject.status
-            } as ProjectBrief);
-
+    try {
+        await UserRepo.updateProjects(req.user.id,{
+            id:projectId,
+            name:newProject.name,
+            status:newProject.status
+        } as ProjectBrief);
+    }catch(err) {
+        throw new InternalError(`failed to update user obj with new project brief: ${err}`)
+    }
             new SuccessResponse(`Succesfully Added Team member: ${req.user.full_name} to ${newProject.name}`,{
                 project:newProject,
             }).send(res);
-        }catch(err) {
-            throw new InternalError("failed to update the projet with  new team memeber");
-        }
+       
     })
 )
 

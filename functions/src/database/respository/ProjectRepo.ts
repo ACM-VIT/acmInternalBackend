@@ -74,15 +74,11 @@ export default class ProjectRepo {
     updates: any
   ): Promise<any> {
     const project = await this.findById(id);
-    if(project) 
-      delete project["id"];
-    else 
-      return undefined;
-    if (!project.teamMembers) project.teamMembers = [];
-    delete updates["accounts_connected"];
-    delete updates["projects"];
-    project.teamMembers = [...project.teamMembers,updates];
-    return await this.update(id, project);
+    if(project) delete project["id"];
+    if (!project) return undefined;
+    if (!project.teamMemebers) project.teamMemebers = {};
+    project.teamMemebers = { ...project.teamMemebers, ...updates };
+    await this.update(id, project);
   }
 
   public static async updateWanted(id:string,updates:any):Promise<any>{
