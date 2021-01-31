@@ -39,7 +39,7 @@ router.put(
             throw new InternalError(`failed to remove user with new project brief: ${err}`)
         }
 
-        new SuccessResponse(`Succesfully Added Team member: ${req.user.full_name} to ${newProject.name}`,{
+        new SuccessResponse(`Succesfully Removed Team member: ${req.user.full_name} of ${newProject.name}`,{
             project:newProject,
         }).send(res);
     
