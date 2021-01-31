@@ -60,6 +60,21 @@ export default class UserRepo {
     user.personal_profiles = { ...user.personal_profiles, ...updates };
     return this.update(id, user);
   }
+  public static async updateProjects(
+    id: string,
+    updates: any
+  ): Promise<any> {
+    const user = await this.findById(id);
+    if (!user) return undefined;
+    if (!user.projects) user.projects = {};
+    const project = {...updates};
+    delete project["accounts_connected"];
+    delete project["projects"]
+    user.projects = { ...user.projects, project };
+    return this.update(id, user);
+  }
+
+
   public static async updateConnectedAccounts(
     id: string,
     updates: any

@@ -1,5 +1,10 @@
-import Project from "./Project";
+import  { ProjectStatus } from "./Project";
 
+export interface ProjectBrief {
+  name:string,
+  status:ProjectStatus,
+  id?:string
+}
 export default interface User {
   id?:string,
   full_name: string;
@@ -10,7 +15,7 @@ export default interface User {
   description?: string;
   roles?:Array<string> ;
   personal_profiles?: Record<string, string>;
-  projects?: Array<Project>;
+  projects?: any;
   accounts_connected?: Record<string, string>;
   discord_username?:string;
   pwd?:string;
