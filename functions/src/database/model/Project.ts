@@ -14,7 +14,7 @@ export default interface Project {
   wanted?: Array<string>;
   resources?: Record<string, string>;
   status: ProjectStatus;
-  teamMembers?: Array<User>;
+  teamMembers?: Array<string>;
   founder?:User
 }
 

@@ -62,12 +62,16 @@ export default class UserRepo {
   }
   public static async updateProjects(
     id: string,
-    updates: any
+    projectName: string
   ): Promise<any> {
     const user = await this.findById(id);
     if (!user) return undefined;
-    if (!user.projects) user.projects = {};
-    user.projects = { ...user.projects, ...updates };
+    if (!user.projects) user.projects = [];
+    if(!user.projects.includes(projectName)) {
+      user.projects.push(projectName);
+    }else {
+      return undefined;
+    }
     return this.update(id, user);
   }
 

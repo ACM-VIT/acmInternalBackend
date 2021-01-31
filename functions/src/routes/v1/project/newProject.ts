@@ -37,7 +37,7 @@ router.post(
 
 
     try {
-      await ProjectRepo.joinProject(createdProject.id,req.user);
+      await ProjectRepo.joinProject(createdProject.id,req.user.full_name);
     }catch(err) {
       throw new InternalError("failed to join project in new project route");
     }

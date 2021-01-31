@@ -8,7 +8,6 @@ import { AuthFailureError, BadRequestError, InternalError } from "../../../core/
 import { ProtectedRequest } from "../../../types/app-request";
 import { SuccessResponse } from "../../../core/ApiResponse";
 import UserRepo from "../../../database/respository/UserRepo";
-import {ProjectBrief} from '../../../database/model/User'
 const router = express.Router();
 
 router.use("/",authentication);
@@ -25,26 +24,25 @@ router.put(
 
         try {
             const user = req.user;
-            await ProjectRepo.joinProject(projectId,user);
+            await ProjectRepo.joinProject(projectId,user.full_name);
         }catch(err) {
             throw new InternalError(`failed to update the projet with  new team memeber: ${err}`);
         }
            
-            const newProject = await ProjectRepo.findById(projectId);
-            if(!newProject) throw new BadRequestError(`Project not able to be updated with id: ${projectId}`);
-    try {
-        await UserRepo.updateProjects(req.user.id,{
-            id:projectId,
-            name:newProject.name,
-            status:newProject.status
-        } as ProjectBrief);
-    }catch(err) {
-        throw new InternalError(`failed to update user obj with new project brief: ${err}`)
-    }
-            new SuccessResponse(`Succesfully Added Team member: ${req.user.full_name} to ${newProject.name}`,{
-                project:newProject,
-            }).send(res);
-       
+        const newProject = await ProjectRepo.findById(projectId);
+        if(!newProject) throw new BadRequestError(`Project not able to be updated with id: ${projectId}`);
+
+        
+        try {
+            await UserRepo.updateProjects(req.user.id,newProject.name);
+        }catch(err) {
+            throw new InternalError(`failed to update user obj with new project brief: ${err}`)
+        }
+
+        new SuccessResponse(`Succesfully Added Team member: ${req.user.full_name} to ${newProject.name}`,{
+            project:newProject,
+        }).send(res);
+    
     })
 )
 

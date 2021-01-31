@@ -71,13 +71,16 @@ export default class ProjectRepo {
   }
   public static async joinProject(
     id: string,
-    updates: any
+    user_fullname: string
   ): Promise<any> {
     const project = await this.findById(id);
     if(project) delete project["id"];
     if (!project) return undefined;
-    if (!project.teamMemebers) project.teamMemebers = {};
-    project.teamMemebers = { ...project.teamMemebers, ...updates };
+    if (!project.teamMembers) project.teamMembers = [];
+    if(!project.teamMembers.include(user_fullname))
+      project.teamMembers.push(user_fullname);
+    else 
+      return undefined;
     await this.update(id, project);
   }
 
