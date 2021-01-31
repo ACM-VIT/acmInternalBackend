@@ -69,10 +69,11 @@ export default class UserRepo {
     if (!user.projects) user.projects = [];
     const pro:Array<string> = user.projects;
     if(!pro.includes(projectName)) {
-      user.projects.push(projectName);
+      pro.push(projectName);
     }else {
       return undefined;
     }
+    user.projects = pro;
     return this.update(id, user);
   }
 
