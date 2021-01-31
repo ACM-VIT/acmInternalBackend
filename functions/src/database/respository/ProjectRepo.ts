@@ -22,6 +22,18 @@ export default class ProjectRepo {
     return res;
   }
 
+
+  public static async findByFounder(
+    name: string
+  ): Promise<FirestoreDoc | undefined> {
+    let res: any = [];
+    const snapshot = await projectsRef.where("founder/name", "==", name).get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
+  }
+
+
   public static async delete(id: string): Promise<any> {
     const res = await projectsRef.doc(id).delete();
     return res;

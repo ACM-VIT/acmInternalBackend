@@ -8,6 +8,7 @@ import { getAccessToken,validateTokenData } from './authUtils';
 import validator, { ValidationSource } from '../helpers/validator';
 import asyncHandler from '../helpers/asyncHandler';
 import authSchema from './authSchema';
+import Logger from '../core/Logger';
 
 
 const router = express.Router();
@@ -22,6 +23,7 @@ export default router.use(
       const payload = await JWT.validate(req.accessToken);
       validateTokenData(payload);
 
+      Logger.info(payload.sub);
       const user = await UserRepo.findById(payload.sub);
       if (!user) throw new AuthFailureError('User not registered: Please Login first and check the autorisation header');
       req.user = user ;

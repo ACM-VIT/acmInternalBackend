@@ -3,10 +3,11 @@ import express from 'express';
 import validator, { ValidationSource } from "../../../helpers/validator";
 import projectSchema from "./projectSchema";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
-import { BadRequestError, InternalError } from "../../../core/ApiError";
+import { BadRequestError, InternalError, NoDataError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
 import Logger from "../../../core/Logger";
 import authentication from "../../../auth/authentication";
+import UserRepo from "../../../database/respository/UserRepo";
 
 const router = express.Router();
 
@@ -24,6 +25,21 @@ router.get(
     })
 )
 
+
+router.get(
+    "/byUser/:id",
+    validator(projectSchema.byName,ValidationSource.PARAM),
+    asyncHandler(async (req,res) =>{
+        const user = await UserRepo.findById(req.params.id);
+        if(!user) throw new BadRequestError(`No such user with id: ${req.params.id}`);
+        const allProjects = await ProjectRepo.findByFounder(user.full_name);
+        if(!allProjects) throw new NoDataError(`No projects by the user or user not part of any projects`);
+
+        new SuccessResponse(`Projects:`,{
+            allProjects
+        }).send(res);
+    }),
+)
 
 router.get(
     "/byId/:id",
