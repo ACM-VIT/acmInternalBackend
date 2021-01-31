@@ -27,7 +27,7 @@ export default class ProjectRepo {
     name: string
   ): Promise<FirestoreDoc | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("founder/name", "==", name).get();
+    const snapshot = await projectsRef.where("founder.full_name", "==", name).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
@@ -67,6 +67,19 @@ export default class ProjectRepo {
     if (!project) return undefined;
     if (!project.resources) project.resources = {};
     project.resources = { ...project.resources, ...updates };
+    await this.update(id, project);
+  }
+  public static async joinProject(
+    id: string,
+    updates: any
+  ): Promise<any> {
+    const project = await this.findById(id);
+    if(project) 
+      delete project["id"];
+    else 
+      return undefined;
+    if (!project.teamMembers) project.teamMembers = {};
+    project.teamMembers = { ...project.teamMembers, ...updates };
     await this.update(id, project);
   }
 
