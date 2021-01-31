@@ -84,7 +84,7 @@ export default class UserRepo {
     if (!user) return undefined;
     if (!user.projects) user.projects = [];
     let pro:Array<string> = user.projects;
-    if(!pro.includes(projectName)) {
+    if(pro.includes(projectName)) {
       pro = this.arrayRemove(pro,projectName);
     }else {
       return undefined;

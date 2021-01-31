@@ -94,7 +94,7 @@ export default class ProjectRepo {
     if (!project) return undefined;
     if (!project.teamMembers) project.teamMembers = [];
     let members:Array<string> = project.teamMembers;  
-    if(!members.includes(user_fullname))
+    if(members.includes(user_fullname))
       members = this.arrayRemove(members,user_fullname);
     else 
       return undefined;
