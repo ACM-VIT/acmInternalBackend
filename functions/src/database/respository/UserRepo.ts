@@ -20,6 +20,24 @@ export default class UserRepo {
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res[0];
   }
+  public static async findByDiscordUsername(
+    discordUsername: string
+  ): Promise<User | undefined> {
+    const snapshot = await usersRef.where("discord_username", "==", discordUsername).get();
+    if (snapshot.empty) return undefined;
+    const res: any = [];
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res[0];
+  }
+  public static async findByName(
+    name: string
+  ): Promise<User | undefined> {
+    const snapshot = await usersRef.where("full_name", "==", name).get();
+    if (snapshot.empty) return undefined;
+    const res: any = [];
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res[0];
+  }
   public static async findById(id: string): Promise<User | undefined> {
     const snapshot = await usersRef.doc(id).get();
     if (!snapshot.exists) return undefined;
