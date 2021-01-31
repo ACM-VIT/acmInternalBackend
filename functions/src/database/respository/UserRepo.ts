@@ -67,7 +67,8 @@ export default class UserRepo {
     const user = await this.findById(id);
     if (!user) return undefined;
     if (!user.projects) user.projects = [];
-    if(!user.projects.includes(projectName)) {
+    const pro:Array<string> = user.projects;
+    if(!pro.includes(projectName)) {
       user.projects.push(projectName);
     }else {
       return undefined;

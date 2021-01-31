@@ -77,10 +77,12 @@ export default class ProjectRepo {
     if(project) delete project["id"];
     if (!project) return undefined;
     if (!project.teamMembers) project.teamMembers = [];
-    if(!project.teamMembers.include(user_fullname))
-      project.teamMembers.push(user_fullname);
+    const members:Array<string> = project.teamMembers;  
+    if(!members.includes(user_fullname))
+      members.push(user_fullname);
     else 
       return undefined;
+    project.teamMembers = members;
     await this.update(id, project);
   }
 
