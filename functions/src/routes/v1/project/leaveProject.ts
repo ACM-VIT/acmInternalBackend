@@ -24,9 +24,9 @@ router.put(
 
         try {
             const user = req.user;
-            await ProjectRepo.joinProject(projectId,user.full_name);
+            await ProjectRepo.leaveProject(projectId,user.full_name);
         }catch(err) {
-            throw new InternalError(`failed to update the projet with  new team memeber: ${err}`);
+            throw new InternalError(`failed to remove team member from projetct collection  ${err}`);
         }
            
         const newProject = await ProjectRepo.findById(projectId);
@@ -34,9 +34,9 @@ router.put(
 
         
         try {
-            await UserRepo.joinProjects(req.user.id,newProject.name);
+            await UserRepo.leaveProject(req.user.id,newProject.name);
         }catch(err) {
-            throw new InternalError(`failed to update user obj with new project brief: ${err}`)
+            throw new InternalError(`failed to remove user with new project brief: ${err}`)
         }
 
         new SuccessResponse(`Succesfully Added Team member: ${req.user.full_name} to ${newProject.name}`,{
@@ -47,4 +47,3 @@ router.put(
 )
 
 export default router;
-

@@ -85,6 +85,28 @@ export default class ProjectRepo {
     project.teamMembers = members;
     await this.update(id, project);
   }
+  public static async leaveProject(
+    id: string,
+    user_fullname: string
+  ): Promise<any> {
+    const project = await this.findById(id);
+    if(project) delete project["id"];
+    if (!project) return undefined;
+    if (!project.teamMembers) project.teamMembers = [];
+    let members:Array<string> = project.teamMembers;  
+    if(!members.includes(user_fullname))
+      members = this.arrayRemove(members,user_fullname);
+    else 
+      return undefined;
+    project.teamMembers = members;
+    await this.update(id, project);
+  }
+
+  private static arrayRemove(arr:Array<any>, value:any):Array<any> { 
+    return arr.filter(function(ele){ 
+        return ele != value; 
+    });
+ }
 
   public static async updateWanted(id:string,updates:any):Promise<any>{
     const project = await this.findById(id);

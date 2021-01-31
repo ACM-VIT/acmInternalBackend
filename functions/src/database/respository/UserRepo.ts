@@ -60,7 +60,7 @@ export default class UserRepo {
     user.personal_profiles = { ...user.personal_profiles, ...updates };
     return this.update(id, user);
   }
-  public static async updateProjects(
+  public static async joinProjects(
     id: string,
     projectName: string
   ): Promise<any> {
@@ -76,6 +76,28 @@ export default class UserRepo {
     user.projects = pro;
     return this.update(id, user);
   }
+  public static async leaveProject(
+    id: string,
+    projectName: string
+  ): Promise<any> {
+    const user = await this.findById(id);
+    if (!user) return undefined;
+    if (!user.projects) user.projects = [];
+    let pro:Array<string> = user.projects;
+    if(!pro.includes(projectName)) {
+      pro = this.arrayRemove(pro,projectName);
+    }else {
+      return undefined;
+    }
+    user.projects = pro;
+    return this.update(id, user);
+  }
+
+  private static arrayRemove(arr:Array<any>, value:any):Array<any> { 
+    return arr.filter(function(ele){ 
+        return ele != value; 
+    });
+ }
 
 
   public static async updateConnectedAccounts(
