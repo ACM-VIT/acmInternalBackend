@@ -1,4 +1,3 @@
-import  { ProjectStatus } from "./Project";
 
 export default interface User {
   id?:string,
