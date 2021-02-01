@@ -3,7 +3,7 @@ import express from 'express';
 import validator, { ValidationSource } from "../../../helpers/validator";
 import projectSchema from "./projectSchema";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
-import { BadRequestError, InternalError, NoDataError } from "../../../core/ApiError";
+import { BadRequestError, NoDataError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
 import Logger from "../../../core/Logger";
 import authentication from "../../../auth/authentication";
@@ -17,9 +17,22 @@ router.get(
     "/all",
   asyncHandler(async (req,res)=>{
         const allProjects = await ProjectRepo.fetchAll();
-        if(!allProjects) throw new InternalError(`No projects retrieved in db`);
+        if(!allProjects) throw new BadRequestError(`No projects retrieved in db`);
 
         new SuccessResponse(`Projects:`,{
+            allProjects
+        }).send(res);
+    })
+)
+
+router.get(
+    "/byTag/:tag",
+    validator(projectSchema.byTag,ValidationSource.PARAM),
+  asyncHandler(async (req,res)=>{
+        const allProjects = await ProjectRepo.findByTag(req.params.tag);
+        if(!allProjects) throw new BadRequestError(`No projects retrieved in db with tag: ${req.params.tag}`);
+
+        new SuccessResponse(`Projects with tag: ${req.params.tag}`,{
             allProjects
         }).send(res);
     })

@@ -22,6 +22,17 @@ export default class ProjectRepo {
     return res;
   }
 
+  public static async findByTag(
+    tagName: string
+  ): Promise<FirestoreDoc | undefined> {
+    let res: any = [];
+    const snapshot = await projectsRef.where("tags", "array-contains", tagName).get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
+  }
+
+
 
   public static async findByFounder(
     name: string

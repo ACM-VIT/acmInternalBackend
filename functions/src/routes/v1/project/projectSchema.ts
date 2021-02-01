@@ -28,6 +28,9 @@ export default {
   byName:Joi.object().keys({
     name:Joi.string().required()
   }),
+  byTag:Joi.object().keys({
+    tag:Joi.string().required()
+  }),
   update: Joi.object().keys({
     name: Joi.string().min(1),
     desc: Joi.string().min(1),
