@@ -14,9 +14,7 @@ export default class ProjectRepo {
     await projectsRef.doc(id).update(updates);
   }
 
-  public static async findByName(
-    name: string
-  ): Promise<FirestoreDoc | undefined> {
+  public static async findByName(name: string): Promise<FirestoreDoc | undefined> {
     let res: any = [];
     const snapshot = await projectsRef.where("name", "==", name).get();
     if (snapshot.empty) return undefined;
@@ -24,9 +22,7 @@ export default class ProjectRepo {
     return res;
   }
 
-  public static async findByTag(
-    tagName: string
-  ): Promise<FirestoreDoc | undefined> {
+  public static async findByTag(tagName: string): Promise<FirestoreDoc | undefined> {
     let res: any = [];
     const snapshot = await projectsRef.where("tags", "array-contains", tagName).get();
     if (snapshot.empty) return undefined;
@@ -34,18 +30,45 @@ export default class ProjectRepo {
     return res;
   }
 
+  public static async findByTagPaginate(tagName: string,pageNum:number): Promise<FirestoreDoc | undefined> {
+    let res: any = [];
+    const snapshot = await projectsRef.where("tags", "array-contains", tagName).limit(perPage).offset(perPage*(pageNum-1)).get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
+  }
 
+  public static async findByUser(name: string): Promise<FirestoreDoc | undefined> {
+    let res: any = [];
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", name).get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
+  }
 
-  public static async findByFounder(
-    name: string
-  ): Promise<FirestoreDoc | undefined> {
+  public static async findByUserPaginate(name: string,pageNum:number): Promise<FirestoreDoc | undefined> {
+    let res: any = [];
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", name).limit(perPage).offset(perPage*(pageNum-1)).get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
+  }
+
+  public static async findByFounder(name: string): Promise<FirestoreDoc | undefined> {
     let res: any = [];
     const snapshot = await projectsRef.where("founder.full_name", "==", name).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
-
+ 
+  public static async findByFounderPaginate(name: string,pageNum:number): Promise<FirestoreDoc | undefined> {
+    let res: any = [];
+    const snapshot = await projectsRef.where("founder.full_name", "==", name).limit(perPage).offset(perPage*(pageNum-1)).get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
+  }
 
   public static async delete(id: string): Promise<any> {
     const res = await projectsRef.doc(id).delete();
@@ -89,10 +112,7 @@ export default class ProjectRepo {
     return res;
   }
 
-  public static async updateResourcesLinks(
-    id: string,
-    updates: any
-  ): Promise<any> {
+  public static async updateResourcesLinks(id: string,updates: any): Promise<any> {
     const project = await this.findById(id);
     if(project) delete project["id"];
     if (!project) return undefined;
@@ -100,10 +120,8 @@ export default class ProjectRepo {
     project.resources = { ...project.resources, ...updates };
     await this.update(id, project);
   }
-  public static async joinProject(
-    id: string,
-    user_fullname: string
-  ): Promise<any> {
+
+  public static async joinProject(id: string,user_fullname: string): Promise<any> {
     const project = await this.findById(id);
     if(project) delete project["id"];
     if (!project) return undefined;
@@ -116,10 +134,7 @@ export default class ProjectRepo {
     project.teamMembers = members;
     await this.update(id, project);
   }
-  public static async leaveProject(
-    id: string,
-    user_fullname: string
-  ): Promise<any> {
+  public static async leaveProject(id: string,user_fullname: string): Promise<any> {
     const project = await this.findById(id);
     if(project) delete project["id"];
     if (!project) return undefined;
@@ -132,14 +147,13 @@ export default class ProjectRepo {
     project.teamMembers = members;
     await this.update(id, project);
   }
-
   private static arrayRemove(arr:Array<any>, value:any):Array<any> { 
     return arr.filter(function(ele){ 
         return ele != value; 
     });
  }
-
-  public static async updateWanted(id:string,updates:any):Promise<any>{
+ 
+public static async updateWanted(id:string,updates:any):Promise<any>{
     const project = await this.findById(id);
     if(project) delete project["id"];
     if (!project) return undefined;

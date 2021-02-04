@@ -25,14 +25,21 @@ export default {
   byId:Joi.object().keys({
     id:Joi.string().required()
   }),
+  byIdPaginate:Joi.object().keys({
+    id:Joi.string().required(),
+    pageNum:Joi.string().required()
+  }),
   byName:Joi.object().keys({
     name:Joi.string().required()
   }),
   byTag:Joi.object().keys({
     tag:Joi.string().required()
   }),
+  ByTagPaginate:Joi.object().keys({
+    tag:Joi.string().required()
+  }),
   byPageNum:Joi.object().keys({
-    pageNum:Joi.number().required()
+    pageNum:Joi.string().required()
   }),
   update: Joi.object().keys({
     name: Joi.string().min(1),

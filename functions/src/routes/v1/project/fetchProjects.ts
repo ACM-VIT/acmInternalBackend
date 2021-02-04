@@ -26,6 +26,20 @@ router.get(
 )
 
 router.get(
+    "/all/:pageNum",
+    validator(projectSchema.byPageNum,ValidationSource.PARAM),
+    asyncHandler(async (req,res)=>{
+        let pn:number = parseInt(req.params.pageNum)
+        const allProjects = await ProjectRepo.fetchAllPaginate(pn);
+        if(!allProjects) throw new BadRequestError(`No projects retrieved in db`);
+
+        new SuccessResponse(`Projects:`,{
+            allProjects
+        }).send(res);
+    })
+)
+
+router.get(
     "/byTag/:tag",
     validator(projectSchema.byTag,ValidationSource.PARAM),
   asyncHandler(async (req,res)=>{
@@ -38,14 +52,76 @@ router.get(
     })
 )
 
+router.get(
+    "/byTag/:tag/:pageNum",
+    validator(projectSchema.ByTagPaginate,ValidationSource.PARAM),
+  asyncHandler(async (req,res)=>{
+        let pageNum:number = parseInt(req.params.pageNum);
+        const allProjects = await ProjectRepo.findByTagPaginate(req.params.tag,pageNum);
+        if(!allProjects) throw new BadRequestError(`No projects retrieved in db with tag: ${req.params.tag}`);
 
+        new SuccessResponse(`Projects with tag: ${req.params.tag}`,{
+            allProjects
+        }).send(res);
+    })
+)
+
+
+router.get(
+    "/byFounder/:id",
+    validator(projectSchema.byId,ValidationSource.PARAM),
+    asyncHandler(async (req,res) =>{
+        const user = await UserRepo.findById(req.params.id);
+        if(!user) throw new BadRequestError(`No such user with id: ${req.params.id}`);
+        const allProjects = await ProjectRepo.findByFounder(user.full_name);
+        if(!allProjects) throw new NoDataError(`No projects by the user or user not part of any projects`);
+
+        new SuccessResponse(`Projects of user id: ${req.params.id}`,{
+            allProjects
+        }).send(res);
+    }),
+)
+
+router.get(
+    "/byFounder/:id/:pageNum",
+    validator(projectSchema.byIdPaginate,ValidationSource.PARAM),
+    asyncHandler(async (req,res) =>{
+        const user = await UserRepo.findById(req.params.id);
+        if(!user) throw new BadRequestError(`No such user with id: ${req.params.id}`);
+
+        let pageNum:number = parseInt(req.params.pageNum);
+        const allProjects = await ProjectRepo.findByFounderPaginate(user.full_name,pageNum);
+        if(!allProjects) throw new NoDataError(`No projects by the user or user not part of any projects`);
+
+        new SuccessResponse(`Projects of user id: ${req.params.id}`,{
+            allProjects
+        }).send(res);
+    }),
+)
 router.get(
     "/byUser/:id",
     validator(projectSchema.byId,ValidationSource.PARAM),
     asyncHandler(async (req,res) =>{
         const user = await UserRepo.findById(req.params.id);
         if(!user) throw new BadRequestError(`No such user with id: ${req.params.id}`);
-        const allProjects = await ProjectRepo.findByFounder(user.full_name);
+        const allProjects = await ProjectRepo.findByUser(user.full_name);
+        if(!allProjects) throw new NoDataError(`No projects by the user or user not part of any projects`);
+
+        new SuccessResponse(`Projects of user id: ${req.params.id}`,{
+            allProjects
+        }).send(res);
+    }),
+)
+
+router.get(
+    "/byUser/:id/:pageNum",
+    validator(projectSchema.byIdPaginate,ValidationSource.PARAM),
+    asyncHandler(async (req,res) =>{
+        const user = await UserRepo.findById(req.params.id);
+        if(!user) throw new BadRequestError(`No such user with id: ${req.params.id}`);
+
+        let pageNum:number = parseInt(req.params.pageNum);
+        const allProjects = await ProjectRepo.findByUserPaginate(user.full_name,pageNum);
         if(!allProjects) throw new NoDataError(`No projects by the user or user not part of any projects`);
 
         new SuccessResponse(`Projects of user id: ${req.params.id}`,{
@@ -86,18 +162,6 @@ router.get(
     })
 )
 
-router.get(
-    "/all/paginate/:pageNum",
-    validator(projectSchema.byPageNum,ValidationSource.PARAM),
-    asyncHandler(async (req,res)=>{
-        let pn:number = parseInt(req.params.pageNum)
-        const allProjects = await ProjectRepo.fetchAllPaginate(pn);
-        if(!allProjects) throw new BadRequestError(`No projects retrieved in db`);
 
-        new SuccessResponse(`Projects:`,{
-            allProjects
-        }).send(res);
-    })
-)
 
 export default router;
