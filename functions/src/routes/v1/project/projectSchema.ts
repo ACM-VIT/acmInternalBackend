@@ -36,7 +36,8 @@ export default {
     tag:Joi.string().required()
   }),
   ByTagPaginate:Joi.object().keys({
-    tag:Joi.string().required()
+    tag:Joi.string().required(),
+    pageNum:Joi.string().required()
   }),
   byPageNum:Joi.object().keys({
     pageNum:Joi.string().required()
