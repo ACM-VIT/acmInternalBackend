@@ -26,6 +26,20 @@ router.get(
 )
 
 router.get(
+    "/all/:pageNum",
+    validator(projectSchema.byPageNum,ValidationSource.PARAM),
+    asyncHandler(async (req,res)=>{
+        let pn :number = parseInt(req.params.pageNum)
+        const allProjects = await ProjectRepo.fetchAllPaginate(pn);
+        if(!allProjects) throw new BadRequestError(`No projects retrieved in db`);
+
+        new SuccessResponse(`Projects:`,{
+            allProjects
+        }).send(res);
+    })
+)
+
+router.get(
     "/byTag/:tag",
     validator(projectSchema.byTag,ValidationSource.PARAM),
   asyncHandler(async (req,res)=>{

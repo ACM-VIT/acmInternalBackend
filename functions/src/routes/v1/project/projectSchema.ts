@@ -31,6 +31,9 @@ export default {
   byTag:Joi.object().keys({
     tag:Joi.string().required()
   }),
+  byPageNum:Joi.object().keys({
+    pageNum:Joi.number().required()
+  }),
   update: Joi.object().keys({
     name: Joi.string().min(1),
     desc: Joi.string().min(1),

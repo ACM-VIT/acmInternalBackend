@@ -1,6 +1,8 @@
 import {  FirestoreDoc, FirestoreDocRef, firestoreInstance, projectsRef } from "../..";
 import Project, { PROJECT_COLLECTION_NAME } from "../model/Project";
 
+const perPage = 3;
+
 export default class ProjectRepo {
   public static async create(project: Project): Promise<FirestoreDocRef> {
     const createdProjectRef = await projectsRef.doc();
@@ -69,6 +71,24 @@ export default class ProjectRepo {
     );
     return res;
   }
+
+  public static async fetchAllPaginate(pageNum:number): Promise<FirestoreDoc[] | undefined> {
+    const allProjects = await firestoreInstance
+      .collection(PROJECT_COLLECTION_NAME)
+      .limit(perPage)
+      .offset(perPage*(pageNum-1))
+      .get();
+    if (allProjects.empty) return undefined;
+    const res: any = [];
+    allProjects.forEach((doc) =>
+      res.push({
+        id: doc.id,
+        ...doc.data(),
+      })
+    );
+    return res;
+  }
+
   public static async updateResourcesLinks(
     id: string,
     updates: any
