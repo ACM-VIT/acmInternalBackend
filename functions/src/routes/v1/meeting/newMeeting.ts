@@ -1,6 +1,7 @@
 import express from 'express';
 import authentication from '../../../auth/authentication';
 import { BadRequestError, InternalError } from '../../../core/ApiError';
+import { SuccessResponse } from '../../../core/ApiResponse';
 import { MeetingStatus } from '../../../database/model/Meeting';
 import GoogleMeet from '../../../database/respository/GoogleMeetRepo';
 import MeetingRepo from '../../../database/respository/MeetingRepo';
@@ -33,6 +34,9 @@ router.post(
 
         try {
             await GoogleMeet.insertEventIntoCal(meeting);
+            new SuccessResponse("Sucessfully added the meeting to calender", {
+                meeting
+            }).send(res);
         } catch (err) {
             throw new InternalError(`Failed to create a google meeting in calender: ${err}`);
         }
