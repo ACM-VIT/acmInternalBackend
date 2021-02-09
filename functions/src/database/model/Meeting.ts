@@ -1,6 +1,6 @@
 import User from "./User";
 
-export const MEETING_COLELCTION_NAME = "meetings";
+export const MEETING_COLELCTION_NAME = "Meetings";
 
 export enum MeetingStatus {
     CONFIRMED = "confirmed",

@@ -84,7 +84,8 @@ export default class GoogleMeet {
 
     public static async insertEventIntoCal(meeting: Meeting) {
         // console.log("second func",JSON.stringify(app,null,3));
-        let dateTime = this.dateTimeForCalander(meeting.start);
+        const startDateTime: Date = new Date(meeting.start);
+        let dateTime = this.dateTimeForCalander(startDateTime);
         const id = await crypto.randomBytes(20).toString('hex')
         // Event for Google Calendar
         let event = {
