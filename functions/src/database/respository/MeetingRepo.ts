@@ -12,3 +12,4 @@ export default class MeetingRepo {
         const newUser = await (await createdUserRef.get()).data() as Meeting;
         return { ...newUser, id: createdUserRef.id };
     }
+}
