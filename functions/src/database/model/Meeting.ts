@@ -9,6 +9,7 @@ export enum MeetingStatus {
 }
 
 export default interface Meeting {
+    id?: string;
     title: string;
     about: string;
     status: MeetingStatus;
