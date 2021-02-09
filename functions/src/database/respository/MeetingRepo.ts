@@ -12,11 +12,11 @@ export default class MeetingRepo {
         const newUser = await (await createdMeetingRef.get()).data() as Meeting;
         return { ...newUser, id: createdMeetingRef.id };
     }
-    public static async findByTitleAndTime(
+    public static async findByTitleAndStartTime(
         title: string,
-        time: string,
+        start: string,
     ): Promise<Meeting | undefined> {
-        const snapshot = await meetingsRef.where("title", "==", title).where("time", "==", time).get();
+        const snapshot = await meetingsRef.where("title", "==", title).where("start", "==", start).get();
         if (snapshot.empty) return undefined;
         const res: any = [];
         snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));

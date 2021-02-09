@@ -22,7 +22,7 @@ router.post(
         const { title, about, start } = req.body;
         if (!req.user) throw new BadRequestError("user auth middleware failed");
 
-        const exists = await MeetingRepo.findByTitleAndTime(title, start);
+        const exists = await MeetingRepo.findByTitleAndStartTime(title, start);
         if (exists) throw new BadRequestError(`${title} already scheduled at ${title}`);
 
         const meeting = await MeetingRepo.create({
