@@ -90,7 +90,7 @@ export default class GoogleMeet {
         // Event for Google Calendar
         let event = {
             'summary': `${meeting.title}`,
-            'description': `About:\n${meeting.about}\n\nMeeting scheduled by;\n ${meeting.initiator.full_name}`,
+            'description': `About:\n${meeting.about}\n\nMeeting scheduled by:\n${meeting.initiator.full_name}`,
             "conferenceDataVersion": 1,
             'start': {
                 'dateTime': dateTime['start'],
