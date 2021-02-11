@@ -28,7 +28,7 @@ router.post(
             await MeetingRepo.deleteMeeting(meeting.id);
             new SuccessMsgResponse("Successfully deleted/cancelled the event").send(res);
         } catch (err) {
-            throw new InternalError(`failed to delete meeting of googe cal id: ${meeting.calEventId}\nerr:${err}`);
+            throw new InternalError(`failed to delete meeting of googe cal id: ${meeting.calEventId}\n\noerrs:${err}`);
         }
 
     })

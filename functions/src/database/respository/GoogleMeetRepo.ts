@@ -135,9 +135,8 @@ export default class GoogleMeet {
                 calendarId: calendarId,
                 eventId: eventId
             });
-
-            if (response['status'] == 200 && response['statusText'] === 'OK') {
-                // console.log(JSON.stringify(response.data, null, 2));
+            console.log(JSON.stringify(response, null, 3));
+            if (response['status'] == 204 && response['statusText'] === "No Content") {
                 return response.data;
             } else {
                 return undefined;
