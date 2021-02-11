@@ -15,4 +15,5 @@ export default interface Meeting {
     status: MeetingStatus;
     start: Date;
     initiator: User;
+    calEventId?: string;
 }
