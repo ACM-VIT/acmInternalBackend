@@ -42,11 +42,9 @@ export default class MeetingRepo {
     }
 
     public static async deleteMeeting(id: string): Promise<any> {
-        const doc = await meetingsRef.where('id', '==', id).get();
-        doc.forEach(element => {
-            element.ref.delete();
-            console.log(`deleted: ${element.id}`);
-        });
+        const doc = await meetingsRef.doc(id);
+        await doc.delete();
+        console.log(`deleted: ${id}`);
         return;
     }
 }
