@@ -22,13 +22,14 @@ router.post(
         if (!meeting.id) throw new NoDataError(`id not defined in the meeting of title ${title}`);
         if (!meeting.calEventId) throw new NoDataError(`google calender id[calEventId field]not defined in the meeting of title ${title}`);
 
+
+        const result = await GoogleMeet.deleteEvent(meeting.calEventId);
+        if (!result) throw new InternalError(`google:failed to delete meeting of googe cal id: ${meeting.calEventId}`)
         try {
-            const result = await GoogleMeet.deleteEvent(meeting.calEventId);
-            if (!result) throw new InternalError(`google:failed to delete meeting of googe cal id: ${meeting.calEventId}`)
             await MeetingRepo.deleteMeeting(meeting.id);
             new SuccessMsgResponse("Successfully deleted/cancelled the event").send(res);
         } catch (err) {
-            throw new InternalError(`${meeting.calEventId} has most probably already been deleted\n\noerrs:${err}`);
+            throw new InternalError(`failed to delete the meeting: ${meeting.title}`);
         }
 
     })
