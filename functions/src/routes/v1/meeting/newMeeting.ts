@@ -39,7 +39,8 @@ router.post(
             const meeting = await MeetingRepo.create(inputMeet);
             if (!meeting) throw new InternalError("error: Failed to create a new Meeting");
             new SuccessResponse("Sucessfully added the meeting to calender", {
-                meeting
+                meeting,
+                event,
             }).send(res);
         } catch (err) {
             throw new InternalError(`Failed to create a google meeting in calender: ${err}`);
