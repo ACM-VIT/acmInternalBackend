@@ -2,7 +2,7 @@ import express from 'express';
 import authentication from '../../../auth/authentication';
 import { BadRequestError, InternalError } from '../../../core/ApiError';
 import { SuccessResponse } from '../../../core/ApiResponse';
-import { MeetingStatus } from '../../../database/model/Meeting';
+import Meeting, { MeetingStatus } from '../../../database/model/Meeting';
 import GoogleMeet from '../../../database/respository/GoogleMeetRepo';
 import MeetingRepo from '../../../database/respository/MeetingRepo';
 import asyncHandler from '../../../helpers/asyncHandler';
@@ -25,17 +25,19 @@ router.post(
         const exists = await MeetingRepo.findByTitleAndStartTime(title, start);
         if (exists) throw new BadRequestError(`${title} already scheduled at ${title}`);
 
-        const meeting = await MeetingRepo.create({
+        const inputMeet: Meeting = {
             title,
             about,
             start,
             initiator: req.user,
             status: MeetingStatus.CONFIRMED,
-        });
-        if (!meeting) throw new InternalError("error: Failed to create a new Meeting");
+        };
 
         try {
-            await GoogleMeet.insertEventIntoCal(meeting);
+            const event = await GoogleMeet.insertEventIntoCal(inputMeet);
+            if (!event) throw new InternalError("error: unable  to create a event in the google calender")
+            const meeting = await MeetingRepo.create(inputMeet);
+            if (!meeting) throw new InternalError("error: Failed to create a new Meeting");
             new SuccessResponse("Sucessfully added the meeting to calender", {
                 meeting
             }).send(res);

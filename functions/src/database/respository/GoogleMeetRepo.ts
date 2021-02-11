@@ -62,7 +62,7 @@ export default class GoogleMeet {
     };
 
     // Insert new event to Google Calendar
-    private static async insertEvent(event: any) {
+    private static async insertEvent(event: any): Promise<any> {
         try {
             let response = await calendar.events.insert({
                 auth,
@@ -71,18 +71,18 @@ export default class GoogleMeet {
             } as any);
             //  console.log("google response ", JSON.stringify(response,null,2));
             if (response['status'] == 200 && response['statusText'] === 'OK') {
-                console.log(JSON.stringify(response.data, null, 2));
-                return 1;
+                // console.log(JSON.stringify(response.data, null, 2));
+                return response.data;
             } else {
-                return 0;
+                return undefined;
             }
         } catch (error) {
             console.log(`Error at insertEvent --> ${error}`);
-            return 0;
+            return undefined;
         }
     };
 
-    public static async insertEventIntoCal(meeting: Meeting) {
+    public static async insertEventIntoCal(meeting: Meeting): Promise<any> {
         // console.log("second func",JSON.stringify(app,null,3));
         const startDateTime: Date = new Date(meeting.start);
         let dateTime = this.dateTimeForCalander(startDateTime);
@@ -118,9 +118,12 @@ export default class GoogleMeet {
         };
         try {
             const result = await this.insertEvent(event);
-            console.log("insertevent into cal success", JSON.stringify(event, null, 2), result);
+            console.log("insertevent into cal success", JSON.stringify(result, null, 3));
+            if (!result) return undefined;
+            return result;
         } catch (err) {
             console.log("insertevent into cal failed ", err);
+            return undefined;
         }
     }
 
