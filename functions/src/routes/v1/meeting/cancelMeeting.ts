@@ -24,7 +24,7 @@ router.post(
 
         try {
             const result = await GoogleMeet.deleteEvent(meeting.calEventId);
-            if (!result) throw new InternalError(`google:failed to delete meeting of googe cal id: ${meeting.calEventId}\nerr:${err}`)
+            if (!result) throw new InternalError(`google:failed to delete meeting of googe cal id: ${meeting.calEventId}`)
             await MeetingRepo.deleteMeeting(meeting.id);
             new SuccessMsgResponse("Successfully deleted/cancelled the event").send(res);
         } catch (err) {
