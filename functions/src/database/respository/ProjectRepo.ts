@@ -1,7 +1,7 @@
 import {  FirestoreDoc, FirestoreDocRef, firestoreInstance, projectsRef } from "../..";
 import Project, { PROJECT_COLLECTION_NAME } from "../model/Project";
 
-const perPage = 3;
+const perPage = 15;
 
 export default class ProjectRepo {
   public static async create(project: Project): Promise<FirestoreDocRef> {

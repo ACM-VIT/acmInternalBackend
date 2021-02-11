@@ -101,6 +101,7 @@ export const SubscribeUserToTopics = functions.firestore.document('Users/{userId
   }
   return null;
 });
+/*
 export const NotifyNewProject = functions.firestore.document('Projects/{projectId}').onCreate((snap, context) => {
   const newProject = snap.data();
   console.log(newProject, 'written by', context.params.projectId);
@@ -132,4 +133,4 @@ export const NotifyNewProject = functions.firestore.document('Projects/{projectI
 
   return null;
 });
-
+*/
