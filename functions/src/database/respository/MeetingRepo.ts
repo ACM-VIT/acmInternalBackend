@@ -22,4 +22,31 @@ export default class MeetingRepo {
         snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
         return res[0];
     }
+    public static async findById(
+        id: string,
+    ): Promise<Meeting | undefined> {
+        const snapshot = await meetingsRef.where("id", "==", id).get();
+        if (snapshot.empty) return undefined;
+        const res: any = [];
+        snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+        return res[0];
+    }
+    public static async findByTitle(
+        title: string,
+    ): Promise<Meeting | undefined> {
+        const snapshot = await meetingsRef.where("title", "==", title).get();
+        if (snapshot.empty) return undefined;
+        const res: any = [];
+        snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+        return res[0];
+    }
+
+    public static async deleteMeeting(id: string): Promise<any> {
+        const doc = await meetingsRef.where('id', '==', id).get();
+        doc.forEach(element => {
+            element.ref.delete();
+            console.log(`deleted: ${element.id}`);
+        });
+        return;
+    }
 }

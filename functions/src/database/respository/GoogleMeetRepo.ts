@@ -127,6 +127,27 @@ export default class GoogleMeet {
         }
     }
 
+    public static async deleteEvent(eventId: string): Promise<any> {
+
+        try {
+            let response = await calendar.events.delete({
+                auth: auth,
+                calendarId: calendarId,
+                eventId: eventId
+            });
+
+            if (response['status'] == 200 && response['statusText'] === 'OK') {
+                // console.log(JSON.stringify(response.data, null, 2));
+                return response.data;
+            } else {
+                return undefined;
+            }
+        } catch (error) {
+            console.log(`Error at deleteEvent --> ${error}`);
+            return undefined;
+        }
+    };
+
 
     // //Get all the events between two dates
     // private static async getEvents(dateTimeStart: any, dateTimeEnd: any) {

@@ -6,4 +6,7 @@ export default {
         about: Joi.string().required(),
         start: Joi.date().iso().required(),
     }),
+    cancel: Joi.object().keys({
+        title: Joi.string().required(),
+    }),
 }
