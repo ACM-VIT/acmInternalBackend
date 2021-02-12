@@ -7,15 +7,18 @@ export enum ProjectStatus {
   COMPLETED = "completed",
 }
 export default interface Project {
+  id?: string;
   name: string;
   desc?: string;
-  tags?:string[];
-  image?:string;
+  tags?: string[];
+  image?: string;
   wanted?: Array<string>;
   resources?: Record<string, string>;
   status: ProjectStatus;
-  teamMembers?: Array<string>;
-  founder?:User
+  teamMembers?: Array<string>; //only names of teamMemebrs
+  teamMembersProfilePic?: Array<string>;
+  teamMembersId?: Array<string>;
+  founder?: User
 }
 
 export const PROJECT_COLLECTION_NAME = "Projects";
