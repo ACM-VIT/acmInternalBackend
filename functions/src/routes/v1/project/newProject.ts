@@ -33,7 +33,7 @@ router.post(
     let tags: Array<any> | undefined = req.body.tags;
 
     if (tags && tags.length > 0) {
-      for (let tag in tags) {
+      for (let tag of tags) {
         const dbtag = await TagRepo.findByName(tag);
         if (!dbtag) {
           const createdtag = await TagRepo.create({ name: tag })
