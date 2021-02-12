@@ -41,7 +41,7 @@ router.get(
 )
 
 router.get(
-    "/status/:status",
+    "/byStatus/:status",
     validator(projectSchema.byStatus, ValidationSource.PARAM),
     asyncHandler(async (req, res) => {
         const allProjects = await ProjectRepo.findByStatus(req.params.status as ProjectStatus);
@@ -53,8 +53,8 @@ router.get(
     })
 )
 router.get(
-    "/status/:status/:pageNum",
-    validator(projectSchema.byStatus, ValidationSource.PARAM),
+    "/byStatus/:status/:pageNum",
+    validator(projectSchema.byStatusPaginate, ValidationSource.PARAM),
     asyncHandler(async (req, res) => {
         const pageNum: number = parseInt(req.params.pageNum);
         const allProjects = await ProjectRepo.findByStatusPaginate(req.params.status as ProjectStatus, pageNum);
