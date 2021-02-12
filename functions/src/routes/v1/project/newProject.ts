@@ -1,13 +1,13 @@
-import asyncHandler from "../../../helpers/asyncHandler";
 import express from "express";
-import validator from "../../../helpers/validator";
-import projectSchema from "./projectSchema";
-import Project, { ProjectStatus } from "../../../database/model/Project";
-import ProjectRepo from "../../../database/respository/ProjectRepo";
+import authentication from "../../../auth/authentication";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
-import authentication from "../../../auth/authentication";
+import Project, { ProjectStatus } from "../../../database/model/Project";
+import ProjectRepo from "../../../database/respository/ProjectRepo";
+import asyncHandler from "../../../helpers/asyncHandler";
+import validator from "../../../helpers/validator";
 import { ProtectedRequest } from "../../../types/app-request";
+import projectSchema from "./projectSchema";
 
 const router = express.Router();
 
@@ -15,10 +15,10 @@ router.post(
   "/",
   authentication,
   validator(projectSchema.new),
-  asyncHandler(async (req:ProtectedRequest, res) => {
+  asyncHandler(async (req: ProtectedRequest, res) => {
     const newProject: Project = req.body;
     const docId = req.user?.id;
-    if(!docId || !req.user) throw new BadRequestError("Middle ware failed to parse token and get user id in new project route  ");
+    if (!docId || !req.user) throw new BadRequestError("Middle ware failed to parse token and get user id in new project route  ");
     newProject.founder = req.user;
     delete newProject.founder["accounts_connected"];
     delete newProject.founder["projects"];
@@ -37,8 +37,8 @@ router.post(
 
 
     try {
-      await ProjectRepo.joinProject(createdProject.id,req.user.full_name);
-    }catch(err) {
+      await ProjectRepo.joinProject(createdProject.id, req.user);
+    } catch (err) {
       throw new InternalError("failed to join project in new project route");
     }
 
