@@ -20,6 +20,8 @@ export default interface Project {
   teamMembersId?: Array<string>;
   founder?: User
   icon?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const PROJECT_COLLECTION_NAME = "Projects";

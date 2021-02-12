@@ -6,6 +6,8 @@ const perPage = 15;
 
 export default class ProjectRepo {
   public static async create(project: Project): Promise<FirestoreDocRef> {
+    const now = new Date();
+    project.createdAt = project.updatedAt = now;
     const createdProjectRef = await projectsRef.doc();
     createdProjectRef.set(project, { merge: true });
     return createdProjectRef;
@@ -15,32 +17,32 @@ export default class ProjectRepo {
     await projectsRef.doc(id).update(updates);
   }
 
-  public static async findByStatus(status: ProjectStatus): Promise<Project | undefined> {
+  public static async findByStatus(status: ProjectStatus): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("status", "==", status).get();
+    const snapshot = await projectsRef.where("status", "==", status).orderBy("updatedAt", "desc").get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
-  public static async findByStatusPaginate(status: ProjectStatus, pageNum: number): Promise<Project | undefined> {
+  public static async findByStatusPaginate(status: ProjectStatus, pageNum: number): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("status", "==", status).limit(perPage).offset(perPage * (pageNum - 1)).get();
-    if (snapshot.empty) return undefined;
-    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
-    return res;
-  }
-
-  public static async findByStatusAndUser(status: ProjectStatus, user: User): Promise<Project | undefined> {
-    let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).get();
+    const snapshot = await projectsRef.where("status", "==", status).orderBy("updatedAt", "desc").limit(perPage).offset(perPage * (pageNum - 1)).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
 
-  public static async findByStatusAndUserPaginate(status: ProjectStatus, user: User, pageNum: number): Promise<Project | undefined> {
+  public static async findByStatusAndUser(status: ProjectStatus, user: User): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).limit(perPage).offset(perPage * (pageNum - 1)).get();
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).orderBy("updatedAt", "desc").get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
+  }
+
+  public static async findByStatusAndUserPaginate(status: ProjectStatus, user: User, pageNum: number): Promise<Project[] | undefined> {
+    let res: any = [];
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).orderBy("updatedAt", "desc").limit(perPage).offset(perPage * (pageNum - 1)).orderBy("updatedAt", "desc").get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
@@ -52,42 +54,42 @@ export default class ProjectRepo {
     const snapshot = await projectsRef.where("name", "==", name).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
-    return res;
+    return res[0];
   }
 
-  public static async findByTag(tagName: string): Promise<Project | undefined> {
+  public static async findByTag(tagName: string): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("tags", "array-contains", tagName).get();
+    const snapshot = await projectsRef.where("tags", "array-contains", tagName).orderBy("updatedAt", "desc").get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
 
-  public static async findByTagPaginate(tagName: string, pageNum: number): Promise<Project | undefined> {
+  public static async findByTagPaginate(tagName: string, pageNum: number): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("tags", "array-contains", tagName).limit(perPage).offset(perPage * (pageNum - 1)).get();
+    const snapshot = await projectsRef.where("tags", "array-contains", tagName).orderBy("updatedAt", "desc").limit(perPage).offset(perPage * (pageNum - 1)).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
 
-  public static async findByUser(name: string): Promise<Project | undefined> {
+  public static async findByUser(name: string): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", name).get();
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", name).orderBy("updatedAt", "desc").get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
 
-  public static async findByUserPaginate(name: string, pageNum: number): Promise<Project | undefined> {
+  public static async findByUserPaginate(name: string, pageNum: number): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", name).limit(perPage).offset(perPage * (pageNum - 1)).get();
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", name).orderBy("updatedAt", "desc").limit(perPage).offset(perPage * (pageNum - 1)).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
 
-  public static async findByFounder(name: string): Promise<Project | undefined> {
+  public static async findByFounder(name: string): Promise<Project[] | undefined> {
     let res: any = [];
     const snapshot = await projectsRef.where("founder.full_name", "==", name).get();
     if (snapshot.empty) return undefined;
@@ -95,9 +97,9 @@ export default class ProjectRepo {
     return res;
   }
 
-  public static async findByFounderPaginate(name: string, pageNum: number): Promise<Project | undefined> {
+  public static async findByFounderPaginate(name: string, pageNum: number): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("founder.full_name", "==", name).limit(perPage).offset(perPage * (pageNum - 1)).get();
+    const snapshot = await projectsRef.where("founder.full_name", "==", name).orderBy("updatedAt", "desc").limit(perPage).offset(perPage * (pageNum - 1)).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
@@ -116,6 +118,7 @@ export default class ProjectRepo {
   public static async fetchAll(): Promise<Project[] | undefined> {
     const allProjects = await firestoreInstance
       .collection(PROJECT_COLLECTION_NAME)
+      .orderBy("updatedAt", "desc")
       .get();
     if (allProjects.empty) return undefined;
     const res: any = [];
@@ -131,6 +134,7 @@ export default class ProjectRepo {
   public static async fetchAllPaginate(pageNum: number): Promise<Project[] | undefined> {
     const allProjects = await firestoreInstance
       .collection(PROJECT_COLLECTION_NAME)
+      .orderBy("updatedAt", "desc")
       .limit(perPage)
       .offset(perPage * (pageNum - 1))
       .get();
@@ -151,7 +155,7 @@ export default class ProjectRepo {
     if (!project) return undefined;
     if (!project.resources) project.resources = {};
     project.resources = { ...project.resources, ...updates };
-    await this.update(id, project);
+    return await this.update(id, project);
   }
 
   public static async joinProject(id: string, user: User): Promise<any> {
@@ -176,7 +180,7 @@ export default class ProjectRepo {
     project.teamMembers = members;
     project.teamMembersProfilePic = pArr;
     project.teamMembersId = idArr;
-    await this.update(id, project);
+    return await this.update(id, project);
   }
   public static async leaveProject(id: string, user: User): Promise<any> {
     const project = await this.findById(id);
@@ -197,7 +201,7 @@ export default class ProjectRepo {
       pArr = this.arrayRemove(pArr, user.profilePic);
     if (idArr.includes(user.id))
       idArr = this.arrayRemove(idArr, user.id);
-    await this.update(id, project);
+    return await this.update(id, project);
   }
   private static arrayRemove(arr: Array<any>, value: any): Array<string> {
     return arr.filter(function (ele) {
