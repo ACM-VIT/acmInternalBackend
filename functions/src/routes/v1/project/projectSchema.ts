@@ -36,18 +36,18 @@ export default {
     tag: Joi.string().required()
   }),
   byStatus: Joi.object().keys({
-    status: Joi.string().required()
+    status: Joi.string().valid(...status).required()
   }),
   byStatusPaginate: Joi.object().keys({
-    status: Joi.string().required(),
+    status: Joi.string().valid(...status).required(),
     pageNum: Joi.string().required(),
   }),
   byStatusAndUser: Joi.object().keys({
-    status: Joi.string().required(),
+    status: Joi.string().valid(...status).required(),
     userId: Joi.string().required(),
   }),
   byStatusAndUserPaginate: Joi.object().keys({
-    status: Joi.string().required(),
+    status: Joi.string().valid(...status).required(),
     userId: Joi.string().required(),
     pageNum: Joi.string().required(),
   }),
