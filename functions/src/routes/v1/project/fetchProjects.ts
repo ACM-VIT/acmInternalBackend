@@ -183,7 +183,8 @@ router.get(
     asyncHandler(async (req, res) => {
         const user = await UserRepo.findById(req.params.id);
         if (!user) throw new BadRequestError(`No such user with id: ${req.params.id}`);
-        const allProjects = await ProjectRepo.findByUser(user.full_name);
+        if (!user.id) throw new NoDataError(`No id in user: ${req.params.id}`);
+        const allProjects = await ProjectRepo.findByUser(user.id);
         if (!allProjects) throw new NoDataError(`No projects by the user or user not part of any projects`);
 
         new SuccessResponse(`Projects of user id: ${req.params.id}`, {
@@ -198,9 +199,9 @@ router.get(
     asyncHandler(async (req, res) => {
         const user = await UserRepo.findById(req.params.id);
         if (!user) throw new BadRequestError(`No such user with id: ${req.params.id}`);
-
+        if (!user.id) throw new NoDataError(`No id in user: ${req.params.id}`);
         let pageNum: number = parseInt(req.params.pageNum);
-        const allProjects = await ProjectRepo.findByUserPaginate(user.full_name, pageNum);
+        const allProjects = await ProjectRepo.findByUserPaginate(user.id, pageNum);
         if (!allProjects) throw new NoDataError(`No projects by the user or user not part of any projects`);
 
         new SuccessResponse(`Projects of user id: ${req.params.id}`, {

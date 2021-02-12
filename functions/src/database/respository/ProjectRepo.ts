@@ -73,17 +73,17 @@ export default class ProjectRepo {
     return res;
   }
 
-  public static async findByUser(name: string): Promise<Project[] | undefined> {
+  public static async findByUser(id: string): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", name).orderBy("updatedAt", "desc").get();
+    const snapshot = await projectsRef.where("teamMembersId", "array-contains", id).orderBy("updatedAt", "desc").get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
 
-  public static async findByUserPaginate(name: string, pageNum: number): Promise<Project[] | undefined> {
+  public static async findByUserPaginate(id: string, pageNum: number): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", name).orderBy("updatedAt", "desc").limit(perPage).offset(perPage * (pageNum - 1)).get();
+    const snapshot = await projectsRef.where("teamMembersId", "array-contains", id).orderBy("updatedAt", "desc").limit(perPage).offset(perPage * (pageNum - 1)).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
