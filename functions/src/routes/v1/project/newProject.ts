@@ -4,6 +4,7 @@ import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
 import Project, { ProjectStatus } from "../../../database/model/Project";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
+import TagRepo from "../../../database/respository/TagRepo";
 import asyncHandler from "../../../helpers/asyncHandler";
 import validator from "../../../helpers/validator";
 import { ProtectedRequest } from "../../../types/app-request";
@@ -28,6 +29,21 @@ router.post(
       throw new BadRequestError(
         `Project ${newProject.name} already exists in db`
       );
+
+    let tags: Array<any> | undefined = req.body.tags;
+
+    if (tags && tags.length > 0) {
+      for (let tag in tags) {
+        const dbtag = await TagRepo.findByName(tag);
+        if (!dbtag) {
+          const createdtag = await TagRepo.create({ name: tag })
+          console.log(`created new tag: ${createdtag}`);
+        }
+
+      }
+    }
+
+
 
     const createdProject = await ProjectRepo.create(newProject);
     if (!createdProject)

@@ -14,6 +14,7 @@ import { KEYSTORE_COLLECTION_NAME } from "./database/model/KeyStore";
 import { MEETING_COLELCTION_NAME } from "./database/model/Meeting";
 import { PROJECT_COLLECTION_NAME } from "./database/model/Project";
 import { ROLES_COLLECTION_NAME } from "./database/model/Role";
+import { TAGS_COLLECTION_NAME } from './database/model/Tag';
 import { USER_COLLECTION_NAME } from "./database/model/User";
 import routesV1 from "./routes/v1";
 
@@ -30,14 +31,11 @@ export type FirestoreDocRef = FirebaseFirestore.DocumentReference<
 >;
 export type FirestoreDoc = FirebaseFirestore.DocumentData;
 export const usersRef = firestoreInstance.collection(USER_COLLECTION_NAME);
-export const projectsRef = firestoreInstance.collection(
-  PROJECT_COLLECTION_NAME
-);
-export const meetingsRef = firestoreInstance.collection(
-  MEETING_COLELCTION_NAME
-);
+export const projectsRef = firestoreInstance.collection(PROJECT_COLLECTION_NAME);
+export const meetingsRef = firestoreInstance.collection(MEETING_COLELCTION_NAME);
 export const keystoreRef = firestoreInstance.collection(KEYSTORE_COLLECTION_NAME);
 export const rolesRef = firestoreInstance.collection(ROLES_COLLECTION_NAME);
+export const tagsRef = firestoreInstance.collection(TAGS_COLLECTION_NAME);
 export const PROJECT_FCM_TOPIC = "projects";
 (async () => {
   await populateRole();

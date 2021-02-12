@@ -5,6 +5,7 @@ import { SuccessResponse } from "../../../core/ApiResponse";
 import Logger from "../../../core/Logger";
 import { ProjectStatus } from '../../../database/model/Project';
 import ProjectRepo from "../../../database/respository/ProjectRepo";
+import TagRepo from '../../../database/respository/TagRepo';
 import UserRepo from "../../../database/respository/UserRepo";
 import asyncHandler from "../../../helpers/asyncHandler";
 import validator, { ValidationSource } from "../../../helpers/validator";
@@ -38,6 +39,18 @@ router.get(
             allProjects
         }).send(res);
     })
+)
+
+router.get(
+    "/all/tags",
+    asyncHandler(async (req, res) => {
+        const allTags = await TagRepo.fetchAll();
+        if (!allTags) throw new BadRequestError(`No tags retrieved in db`);
+
+        new SuccessResponse(`Tags:`, {
+            allTags
+        }).send(res);
+    }),
 )
 
 router.get(
