@@ -19,6 +19,7 @@ export default interface Project {
   teamMembersProfilePic?: Array<string>;
   teamMembersId?: Array<string>;
   founder?: User
+  icon?: string;
 }
 
 export const PROJECT_COLLECTION_NAME = "Projects";

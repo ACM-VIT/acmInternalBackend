@@ -21,6 +21,7 @@ export default {
     teamMembers: Joi.array()
       .items(Joi.string().email().required().min(1))
       .min(1),
+    icon: Joi.string().min(1),
   }),
   byId: Joi.object().keys({
     id: Joi.string().required()
