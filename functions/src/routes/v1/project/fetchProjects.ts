@@ -42,7 +42,7 @@ router.get(
 )
 
 router.get(
-    "/all/tags",
+    "/tags/all",
     asyncHandler(async (req, res) => {
         const allTags = await TagRepo.fetchAll();
         if (!allTags) throw new BadRequestError(`No tags retrieved in db`);
