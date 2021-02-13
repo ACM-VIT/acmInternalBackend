@@ -203,11 +203,38 @@ export default class ProjectRepo {
       idArr = this.arrayRemove(idArr, user.id);
     return await this.update(id, project);
   }
+
+  public static async replaceTMName(id: string, user: User, newName: string) {
+    const project = await this.findById(id);
+    if (!project) return undefined;
+    if (!user.profilePic) return undefined;
+    if (!user.id) return undefined;
+    if (!project.teamMembers) project.teamMembers = [];
+    let members: Array<string> = project.teamMembers;
+    if (members.includes(user.full_name))
+      members = this.arrayReplace(members, newName);
+    else
+      return undefined;
+    return await this.update(id, project);
+  }
+
+  public static async updateTeamMemberName(user: User, newName: string): Promise<any> {
+    const projects: Project[] = await this.findByUser(user.id as string) as Project[];
+    projects.forEach((project: Project) => {
+      this.replaceTMName(project.id as string, user, newName);
+    })
+
+  }
+
   private static arrayRemove(arr: Array<any>, value: any): Array<string> {
     return arr.filter(function (ele) {
       return ele != value;
     });
   }
+  private static arrayReplace(arr: Array<any>, odlValue: any, newValue: any): Array<string> {
+    return arr.map((ele) => (ele === value) ? value : ele);
+  }
+
 
   public static async updateWanted(id: string, updates: any): Promise<any> {
     const project = await this.findById(id);
