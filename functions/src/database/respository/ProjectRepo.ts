@@ -187,9 +187,9 @@ export default class ProjectRepo {
     if (!project) return undefined;
     if (!user.profilePic) return undefined;
     if (!user.id) return undefined;
-    if (!project.teamMembers) project.teamMembers = [];
-    if (!project.teamMembersProfilePic) project.teamMembersProfilePic = [];
-    if (!project.teamMembersId) project.teamMembersId = [];
+    if (!project.teamMembers) return undefined;
+    if (!project.teamMembersProfilePic) return undefined;
+    if (!project.teamMembersId) return undefined;
     let members: Array<string> = project.teamMembers;
     let pArr: Array<string> = project.teamMembersProfilePic;
     let idArr: Array<string> = project.teamMembersId;
@@ -204,15 +204,24 @@ export default class ProjectRepo {
     return await this.update(id, project);
   }
 
-  public static async replaceTMName(id: string, user: User, newName: string) {
+  public static async replaceTMNameForProject(id: string, oldName: string, newName: string) {
     const project = await this.findById(id);
     if (!project) return undefined;
-    if (!user.profilePic) return undefined;
-    if (!user.id) return undefined;
-    if (!project.teamMembers) project.teamMembers = [];
+    if (!project.teamMembers) return undefined;
     let members: Array<string> = project.teamMembers;
-    if (members.includes(user.full_name))
-      members = this.arrayReplace(members, newName);
+    if (members.includes(oldName))
+      members = this.arrayReplace(members, oldName, newName);
+    else
+      return undefined;
+    return await this.update(id, project);
+  }
+  public static async replaceTMProfPicForProject(id: string, oldProfPic: string, newProfPic: string) {
+    const project = await this.findById(id);
+    if (!project) return undefined;
+    if (!project.teamMembersProfilePic) return undefined;
+    let members: Array<string> = project.teamMembersProfilePic;
+    if (members.includes(oldProfPic))
+      members = this.arrayReplace(members, oldProfPic, newProfPic);
     else
       return undefined;
     return await this.update(id, project);
@@ -220,10 +229,18 @@ export default class ProjectRepo {
 
   public static async updateTeamMemberName(user: User, newName: string): Promise<any> {
     const projects: Project[] = await this.findByUser(user.id as string) as Project[];
-    projects.forEach((project: Project) => {
-      this.replaceTMName(project.id as string, user, newName);
+    projects.forEach(async (project: Project) => {
+      await this.replaceTMNameForProject(project.id as string, user.full_name, newName);
     })
+    return;
+  }
 
+  public static async updateTeamMemberProfilePic(user: User, newProfPic: string): Promise<any> {
+    const projects: Project[] = await this.findByUser(user.id as string) as Project[];
+    projects.forEach(async (project: Project) => {
+      await this.replaceTMProfPicForProject(project.id as string, user.profilePic as string, newProfPic);
+    })
+    return;
   }
 
   private static arrayRemove(arr: Array<any>, value: any): Array<string> {
@@ -231,8 +248,8 @@ export default class ProjectRepo {
       return ele != value;
     });
   }
-  private static arrayReplace(arr: Array<any>, odlValue: any, newValue: any): Array<string> {
-    return arr.map((ele) => (ele === value) ? value : ele);
+  private static arrayReplace(arr: Array<any>, oldValue: any, newValue: any): Array<string> {
+    return arr.map((ele) => (ele === oldValue) ? newValue : ele);
   }
 
 

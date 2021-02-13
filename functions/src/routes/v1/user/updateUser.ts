@@ -1,18 +1,19 @@
-import asyncHandler from "../../../helpers/asyncHandler";
+import bcrypt from 'bcryptjs';
 import express from "express";
-import validator from "../../../helpers/validator";
-import userSchema from "./userSchema";
-import UserRepo from "../../../database/respository/UserRepo";
+import authentication from "../../../auth/authentication";
 import { BadRequestError, InternalError } from "../../../core/ApiError";
 import { SuccessMsgResponse, SuccessResponse } from "../../../core/ApiResponse";
 import Logger from "../../../core/Logger";
-import authentication from "../../../auth/authentication";
+import ProjectRepo from '../../../database/respository/ProjectRepo';
+import UserRepo from "../../../database/respository/UserRepo";
+import asyncHandler from "../../../helpers/asyncHandler";
+import validator from "../../../helpers/validator";
 import { ProtectedRequest } from "../../../types/app-request";
-import bcrypt from 'bcryptjs'
+import userSchema from "./userSchema";
 
 const router = express.Router();
 
-router.use("/",authentication);
+router.use("/", authentication);
 
 /*
 note
@@ -30,23 +31,38 @@ always remember to add the protested req type in
 router.put(
   "/",
   validator(userSchema.update),
-  asyncHandler(async (req:ProtectedRequest, res) => {
-    const docId = req.user?.id; 
-    if(!docId) throw new BadRequestError("Middle ware failed to parse token and get user id");
+  asyncHandler(async (req: ProtectedRequest, res) => {
+    const docId = req.user?.id;
+    if (!docId) throw new BadRequestError("Middle ware failed to parse token and get user id");
     const user = await UserRepo.findById(docId);
     if (!user)
       throw new BadRequestError(`User with id ${docId} does not exist`);
-    if(req.body.pwd) {
+    if (req.body.pwd) {
       const salt = await bcrypt.genSaltSync(10);
-      const hashedPwd = await bcrypt.hashSync(req.body.pwd,salt);
+      const hashedPwd = await bcrypt.hashSync(req.body.pwd, salt);
       req.body.pwd = hashedPwd;
+    }
+    if (req.body.full_name) {
+      try {
+        await ProjectRepo.updateTeamMemberName(user, req.body.full_name);
+      } catch (err) {
+        throw new InternalError(`error: failed to update the project team members name: ${err}`)
+      }
+    }
+
+    if (req.body.profilePic) {
+      try {
+        await ProjectRepo.updateTeamMemberProfilePic(user, req.body.profilePic);
+      } catch (err) {
+        throw new InternalError(`error: failed to update the project team members profilepic: ${err}`)
+      }
     }
 
     try {
       await UserRepo.update(docId, req.body);
       const updatedUser = await UserRepo.findById(docId);
       new SuccessResponse(`Sucessfully updated user of id ${docId}`, {
-        user:updatedUser,
+        user: updatedUser,
       }).send(res);
     } catch (err) {
       throw new InternalError("Unable to update user");
@@ -57,9 +73,9 @@ router.put(
 router.put(
   "/personalProfileLinks",
   validator(userSchema.updatePersonalProfiles),
-  asyncHandler(async (req:ProtectedRequest, res) => {
+  asyncHandler(async (req: ProtectedRequest, res) => {
     const docId = req.user?.id;
-    if(!docId) throw new BadRequestError("Middle ware failed to parse token and get user id");
+    if (!docId) throw new BadRequestError("Middle ware failed to parse token and get user id");
 
 
     const user = await UserRepo.findById(docId);
