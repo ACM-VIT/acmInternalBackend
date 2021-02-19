@@ -163,6 +163,8 @@ export default class ProjectRepo {
 
   public static async joinProject(id: string, user: User): Promise<Project | undefined> {
     const project = await this.findById(id);
+    Logger.info("test0"+JSON.stringify(project,null,2));
+    Logger.info("test0"+JSON.stringify(user,null,2));
     if (!project) return undefined;
     if (!user.profilePic) return undefined;
     if (!user.id) return undefined;
