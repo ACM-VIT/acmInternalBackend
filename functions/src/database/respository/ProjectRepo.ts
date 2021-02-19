@@ -15,7 +15,8 @@ export default class ProjectRepo {
 
   public static async update(id: string, updates: any): Promise<any> {
     updates["updatedAt"] = new Date();
-    return await projectsRef.doc(id).update(updates);
+    console.log(JSON.stringify(updates,null,2));
+    return projectsRef.doc(id).update(updates);
   }
 
   public static async findByStatus(status: ProjectStatus): Promise<Project[] | undefined> {
@@ -182,7 +183,9 @@ export default class ProjectRepo {
     project.teamMembers = members;
     project.teamMembersProfilePic = pArr;
     project.teamMembersId = idArr;
+    console.log("test 4"+JSON.stringify(project));
     await this.update(id, project);
+    console.log("test 5");
     return project;
   }
   public static async leaveProject(id: string, user: User): Promise<any> {
