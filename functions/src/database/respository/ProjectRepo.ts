@@ -6,7 +6,7 @@ const perPage = 15;
 
 export default class ProjectRepo {
   public static async create(project: Project): Promise<FirestoreDocRef> {
-    project.createdAt =new Date();
+    // project.createdAt =new Date();
     project.updatedAt = new Date(new Date().getTime() + 1000)
     const createdProjectRef = await projectsRef.doc();
     createdProjectRef.set(project, { merge: true });
@@ -14,7 +14,7 @@ export default class ProjectRepo {
   }
 
   public static async update(id: string, updates: any): Promise<any> {
-    await projectsRef.doc(id).update(updates);
+    return await projectsRef.doc(id).update(updates);
   }
 
   public static async findByStatus(status: ProjectStatus): Promise<Project[] | undefined> {
@@ -34,7 +34,7 @@ export default class ProjectRepo {
 
   public static async findByStatusAndUser(status: ProjectStatus, user: User): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).get();
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).orderBy("updatedAt","desc").get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
@@ -42,7 +42,7 @@ export default class ProjectRepo {
 
   public static async findByStatusAndUserPaginate(status: ProjectStatus, user: User, pageNum: number): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).limit(perPage).offset(perPage * (pageNum - 1)).get();
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).orderBy("updatedAt","desc").limit(perPage).offset(perPage * (pageNum - 1)).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
@@ -158,7 +158,7 @@ export default class ProjectRepo {
     return await this.update(id, project);
   }
 
-  public static async joinProject(id: string, user: User): Promise<any> {
+  public static async joinProject(id: string, user: User): Promise<Project | undefined> {
     const project = await this.findById(id);
     if (!project) return undefined;
     if (!user.profilePic) return undefined;
@@ -166,6 +166,7 @@ export default class ProjectRepo {
     if (!project.teamMembers) project.teamMembers = [];
     if (!project.teamMembersProfilePic) project.teamMembersProfilePic = [];
     if (!project.teamMembersId) project.teamMembersId = [];
+    console.log("test1");
     const members: Array<string> = project.teamMembers;
     const pArr: Array<string> = project.teamMembersProfilePic;
     const idArr: Array<string> = project.teamMembersId;
