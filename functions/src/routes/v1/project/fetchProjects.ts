@@ -83,7 +83,7 @@ router.get(
     "/byUserAndStatus/:userId/:status",
     validator(projectSchema.byStatusAndUser, ValidationSource.PARAM),
     asyncHandler(async (req, res) => {
-        const user = await UserRepo.findById(req.params.id)
+        const user = await UserRepo.findById(req.params.userId)
         if (!user) throw new BadRequestError(`no user of id: ${req.params.userId} exists`);
 
 
@@ -102,7 +102,7 @@ router.get(
     asyncHandler(async (req, res) => {
         const pageNum: number = parseInt(req.params.pageNum);
 
-        const user = await UserRepo.findById(req.params.id)
+        const user = await UserRepo.findById(req.params.userId)
         if (!user) throw new BadRequestError(`no user of id: ${req.params.userId} exists`);
 
 

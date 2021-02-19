@@ -45,11 +45,11 @@ export default {
   }),
   byStatusAndUser: Joi.object().keys({
     status: Joi.string().valid(...status).required(),
-    userId: Joi.string().required(),
+    userId: Joi.string().required().min(1),
   }),
   byStatusAndUserPaginate: Joi.object().keys({
     status: Joi.string().valid(...status).required(),
-    userId: Joi.string().required(),
+    userId: Joi.string().required().min(1),
     pageNum: Joi.string().required(),
   }),
   ByTagPaginate: Joi.object().keys({
