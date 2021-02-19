@@ -14,6 +14,7 @@ export default class ProjectRepo {
   }
 
   public static async update(id: string, updates: any): Promise<any> {
+    updates["updatedAt"] = new Date();
     return await projectsRef.doc(id).update(updates);
   }
 
