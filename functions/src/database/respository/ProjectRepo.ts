@@ -34,7 +34,7 @@ export default class ProjectRepo {
 
   public static async findByStatusAndUser(status: ProjectStatus, user: User): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).orderBy("updatedAt", "desc").get();
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
@@ -42,7 +42,7 @@ export default class ProjectRepo {
 
   public static async findByStatusAndUserPaginate(status: ProjectStatus, user: User, pageNum: number): Promise<Project[] | undefined> {
     let res: any = [];
-    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).orderBy("updatedAt", "desc").limit(perPage).offset(perPage * (pageNum - 1)).orderBy("updatedAt", "desc").get();
+    const snapshot = await projectsRef.where("teamMembers", "array-contains", user.full_name).where("status", "==", status).limit(perPage).offset(perPage * (pageNum - 1)).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
@@ -180,7 +180,8 @@ export default class ProjectRepo {
     project.teamMembers = members;
     project.teamMembersProfilePic = pArr;
     project.teamMembersId = idArr;
-    return await this.update(id, project);
+    await this.update(id, project);
+    return project;
   }
   public static async leaveProject(id: string, user: User): Promise<any> {
     const project = await this.findById(id);

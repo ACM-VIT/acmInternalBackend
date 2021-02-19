@@ -52,15 +52,14 @@ router.post(
       );
 
 
-    try {
-      await ProjectRepo.joinProject(createdProject.id, req.user);
-    } catch (err) {
-      throw new InternalError("failed to join project in new project route");
-    }
+   
+      const jPro = await ProjectRepo.joinProject(createdProject.id, req.user);
+      if(!jPro)  throw new InternalError(`failed to join project in new project route: ${createdProject.id}`);
+  
 
     new SuccessResponse(`Created Project with id ${createdProject.id}`, {
       id: createdProject.id,
-      newProject,
+      newProject:jPro,
     }).send(res);
   })
 );
