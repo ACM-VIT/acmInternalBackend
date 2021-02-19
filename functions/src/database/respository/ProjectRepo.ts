@@ -1,4 +1,5 @@
 import { FirestoreDocRef, firestoreInstance, projectsRef } from "../..";
+import Logger from "../../core/Logger";
 import Project, { ProjectStatus, PROJECT_COLLECTION_NAME } from "../model/Project";
 import User from "../model/User";
 
@@ -15,7 +16,7 @@ export default class ProjectRepo {
 
   public static async update(id: string, updates: any): Promise<any> {
     updates["updatedAt"] = new Date();
-    console.log(JSON.stringify(updates,null,2));
+    Logger.info(JSON.stringify(updates,null,2));
     return projectsRef.doc(id).update(updates);
   }
 
@@ -168,14 +169,12 @@ export default class ProjectRepo {
     if (!project.teamMembers) project.teamMembers = [];
     if (!project.teamMembersProfilePic) project.teamMembersProfilePic = [];
     if (!project.teamMembersId) project.teamMembersId = [];
-    console.log("test1");
+    Logger.info("test1");
     const members: Array<string> = project.teamMembers;
     const pArr: Array<string> = project.teamMembersProfilePic;
     const idArr: Array<string> = project.teamMembersId;
     if (!members.includes(user.full_name))
       members.push(user.full_name);
-    else
-      return undefined;
     if (!pArr.includes(user.profilePic))
       pArr.push(user.profilePic);
     if (!idArr.includes(user.id))
@@ -183,9 +182,9 @@ export default class ProjectRepo {
     project.teamMembers = members;
     project.teamMembersProfilePic = pArr;
     project.teamMembersId = idArr;
-    console.log("test 4"+JSON.stringify(project));
+    Logger.info("test 4"+JSON.stringify(project));
     await this.update(id, project);
-    console.log("test 5");
+    Logger.info("test 5");
     return project;
   }
   public static async leaveProject(id: string, user: User): Promise<any> {
