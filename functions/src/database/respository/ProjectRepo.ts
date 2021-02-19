@@ -6,8 +6,8 @@ const perPage = 15;
 
 export default class ProjectRepo {
   public static async create(project: Project): Promise<FirestoreDocRef> {
-    project.createdAt = new Date();
-    project.updatedAt = new Date();
+    project.createdAt =new Date();
+    project.updatedAt = new Date(new Date().getTime() + 1000)
     const createdProjectRef = await projectsRef.doc();
     createdProjectRef.set(project, { merge: true });
     return createdProjectRef;
