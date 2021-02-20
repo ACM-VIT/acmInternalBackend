@@ -1,4 +1,4 @@
-import { FirestoreDocRef, firestoreInstance, projectsRef } from "../..";
+import {firestoreInstance, projectsRef } from "../..";
 import Logger from "../../core/Logger";
 import Project, { ProjectStatus, PROJECT_COLLECTION_NAME } from "../model/Project";
 import User from "../model/User";
@@ -6,12 +6,13 @@ import User from "../model/User";
 const perPage = 15;
 
 export default class ProjectRepo {
-  public static async create(project: Project): Promise<FirestoreDocRef> {
+  public static async create(project: Project): Promise<Project> {
     // project.createdAt =new Date();
     project.updatedAt = new Date(new Date().getTime() + 1000)
     const createdProjectRef = await projectsRef.doc();
     createdProjectRef.set(project, { merge: true });
-    return createdProjectRef;
+    const newProject = await (await createdProjectRef.get()).data() as Project;
+    return {id:createdProjectRef.id,...newProject};
   }
 
   public static async update(id: string, updates: any): Promise<any> {
@@ -161,13 +162,13 @@ export default class ProjectRepo {
     return await this.update(id, project);
   }
 
-  public static async joinProject(id: string, user: User): Promise<Project | undefined> {
+  public static async joinProject(id: string, user: User): Promise<any | undefined> {
     const project = await this.findById(id);
     Logger.info("test0"+JSON.stringify(project,null,2));
     Logger.info("test0"+JSON.stringify(user,null,2));
-    if (!project) return undefined;
-    if (!user.profilePic) return undefined;
-    if (!user.id) return undefined;
+    if (!project) return "np";
+    if (!user.profilePic) return "pp";
+    if (!user.id) return "id";
     if (!project.teamMembers) project.teamMembers = [];
     if (!project.teamMembersProfilePic) project.teamMembersProfilePic = [];
     if (!project.teamMembersId) project.teamMembersId = [];

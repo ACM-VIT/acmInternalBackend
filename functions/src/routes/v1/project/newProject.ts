@@ -50,16 +50,14 @@ router.post(
       throw new InternalError(
         "unable to create Project:db error newProject.ts"
       );
+    if(!createdProject.id) throw new InternalError(`error: project id not present in createdProject`);
 
-
-   
-      const jPro = await ProjectRepo.joinProject(createdProject.id, req.user);
-      if(!jPro)  throw new InternalError(`failed to join project in new project route: ${createdProject.id}`);
-  
+      const jp = await ProjectRepo.joinProject(createdProject.id, req.user);
+      if(!jp || typeof jp === "string") throw new InternalError(`failed to join project in new project route: ${jp}`);
 
     new SuccessResponse(`Created Project with id ${createdProject.id}`, {
       id: createdProject.id,
-      newProject:jPro,
+      createdProject:jp,
     }).send(res);
   })
 );
