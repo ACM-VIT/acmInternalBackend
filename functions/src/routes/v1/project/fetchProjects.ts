@@ -2,7 +2,6 @@ import express from 'express';
 import authentication from "../../../auth/authentication";
 import { BadRequestError, NoDataError } from "../../../core/ApiError";
 import { SuccessResponse } from "../../../core/ApiResponse";
-import Logger from "../../../core/Logger";
 import { ProjectStatus } from '../../../database/model/Project';
 import ProjectRepo from "../../../database/respository/ProjectRepo";
 import TagRepo from '../../../database/respository/TagRepo';

@@ -5,7 +5,6 @@ import { SuccessResponse } from "../../../core/ApiResponse";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
 import asyncHandler from "../../../helpers/asyncHandler";
 import validator, { ValidationSource } from "../../../helpers/validator";
-import { ProtectedRequest } from '../../../types/app-request';
 import projectSchema from "./projectSchema";
 
 
