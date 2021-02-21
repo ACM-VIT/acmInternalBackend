@@ -134,25 +134,26 @@ export const NotifyNewProject = functions.firestore.document('Projects/{projectI
 });
 */
 
-const ALGOLIA_ID = functions.config().algolia.app_id;
-const ALGOLIA_ADMIN_KEY = functions.config().algolia.api_key;
+const ALGOLIA_ID = "ALUPFNBXR4";
+const ALGOLIA_ADMIN_KEY = "e9c16e3475967265bbfc6642c4cc3f9d";
 const ALGOLIA_INDEX_NAME = 'projects';
 
 const client = algoliasearch(ALGOLIA_ID, ALGOLIA_ADMIN_KEY);
 const index = client.initIndex(ALGOLIA_INDEX_NAME);
 
-exports.addToIndex = functions.firestore.document('Projects/{projectId}').onCreate(snapshot=>{
+export const addToIndex = functions.firestore.document('Projects/{projectId}').onCreate(snapshot=>{
   const data=snapshot.data();
   const objectId = snapshot.id;
-
+  Logger.info(`sending to algolio: ${JSON.stringify(data)} | ${JSON.stringify(objectId)}`);
+  Logger.info(`algolio creds: ${ALGOLIA_ID} \n ${ALGOLIA_ADMIN_KEY} \n ${ALGOLIA_INDEX_NAME}`)
   return index.saveObject({...data,objectId});
 });
 
-exports.updateIndex = functions.firestore.document('Projects/{projectId}').onUpdate((change)=>{
+export const updateIndex = functions.firestore.document('Projects/{projectId}').onUpdate((change)=>{
   const newData=change.after.data();
   const objectId = change.after.id;
 
   return index.saveObject({...newData,objectId});
 });
 
-exports.deleteIndex = functions.firestore.document('Projects/{projectId}').onDelete((snapshot)=>index.deleteObject(snapshot.id));
+export const deleteIndex = functions.firestore.document('Projects/{projectId}').onDelete((snapshot)=>index.deleteObject(snapshot.id));
