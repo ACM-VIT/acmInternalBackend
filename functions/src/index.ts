@@ -143,17 +143,21 @@ const index = client.initIndex(ALGOLIA_INDEX_NAME);
 
 export const addToIndex = functions.firestore.document('Projects/{projectId}').onCreate(snapshot=>{
   const data=snapshot.data();
-  const objectId = snapshot.id;
-  Logger.info(`sending to algolio: ${JSON.stringify(data)} | ${JSON.stringify(objectId)}`);
+  const objectID = snapshot.id;
+  Logger.info(`sending to algolio: ${JSON.stringify(data)} | ${JSON.stringify(objectID)}`);
   Logger.info(`algolio creds: ${ALGOLIA_ID} \n ${ALGOLIA_ADMIN_KEY} \n ${ALGOLIA_INDEX_NAME}`)
-  return index.saveObject({...data,objectId});
+  index.saveObject({...data,objectID})
+  .then(({ objectIDs }:any) => {
+    Logger.info(objectIDs);
+  }).catch(err=>Logger.info(`algolio err out: ${JSON.stringify(err)}`));
+  return;
 });
 
 export const updateIndex = functions.firestore.document('Projects/{projectId}').onUpdate((change)=>{
   const newData=change.after.data();
-  const objectId = change.after.id;
+  const objectID = change.after.id;
 
-  return index.saveObject({...newData,objectId});
+  return index.saveObject({...newData,objectID});
 });
 
 export const deleteIndex = functions.firestore.document('Projects/{projectId}').onDelete((snapshot)=>index.deleteObject(snapshot.id));
