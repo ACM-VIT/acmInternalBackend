@@ -5,6 +5,7 @@ import { SuccessResponse } from "../../../core/ApiResponse";
 import ProjectRepo from "../../../database/respository/ProjectRepo";
 import asyncHandler from "../../../helpers/asyncHandler";
 import validator, { ValidationSource } from "../../../helpers/validator";
+import { ProtectedRequest } from '../../../types/app-request';
 import projectSchema from "./projectSchema";
 
 
@@ -21,6 +22,10 @@ router.put(
     const user = await ProjectRepo.findById(docId);
     if (!user)
       throw new BadRequestError(`User with id ${docId} does not exist`);
+    
+    if(req.body.name) {
+      req.body.name = req.body.name.trim().toLowerCase();
+    }
 
     try {
       await ProjectRepo.update(docId, req.body);
@@ -42,6 +47,10 @@ router.put(
     const user = await ProjectRepo.findById(docId);
     if (!user)
       throw new BadRequestError(`User with id ${docId} does not exist`);
+
+    if(req.body.name) {
+      req.body.name = req.body.name.trim().toLowerCase();
+    }
 
     try {
       await ProjectRepo.updateResourcesLinks(docId, req.body);

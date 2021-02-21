@@ -228,9 +228,26 @@ router.get(
 router.get(
     "/byName/:name",
     asyncHandler(async (req, res) => {
-        const projectName = req.params.name;
-        Logger.info(projectName);
+        let projectName = req.params.name;
+        projectName = projectName.trim().toLowerCase();
         const project = await ProjectRepo.findByName(projectName);
+        if (!project)
+            throw new BadRequestError(
+                `Project ${projectName} does not exist in db`
+            );
+
+        new SuccessResponse(`Project with name: ${projectName}`, {
+            project
+        }).send(res);
+    })
+)
+
+router.get(
+    "/byPartialName/:name",
+    asyncHandler(async (req, res) => {
+        let projectName = req.params.name;
+        projectName = projectName.trim().toLowerCase();
+        const project = await ProjectRepo.findByNamePartial(projectName);
         if (!project)
             throw new BadRequestError(
                 `Project ${projectName} does not exist in db`

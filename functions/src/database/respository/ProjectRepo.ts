@@ -17,7 +17,6 @@ export default class ProjectRepo {
 
   public static async update(id: string, updates: any): Promise<any> {
     updates["updatedAt"] = new Date();
-    Logger.info(JSON.stringify(updates,null,2));
     return projectsRef.doc(id).update(updates);
   }
 
@@ -59,6 +58,14 @@ export default class ProjectRepo {
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res[0];
+  }
+
+  public static async findByNamePartial(name: string): Promise<Project[] | undefined> {
+    let res: any = [];
+    const snapshot = await projectsRef.where("name", ">=", name).where("name","<",name).get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
   }
 
   public static async findByTag(tagName: string): Promise<Project[] | undefined> {

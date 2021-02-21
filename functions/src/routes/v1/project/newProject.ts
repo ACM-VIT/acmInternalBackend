@@ -24,6 +24,7 @@ router.post(
     delete newProject.founder["accounts_connected"];
     delete newProject.founder["projects"];
     newProject.status = ProjectStatus.IDEATION;
+    newProject.name = newProject.name.trim().toLowerCase();
     const exists = await ProjectRepo.findByName(newProject.name);
     if (exists)
       throw new BadRequestError(
