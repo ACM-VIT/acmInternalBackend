@@ -68,6 +68,14 @@ export default class ProjectRepo {
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
   }
+  public static async findByNamePartialPaginate(name: string,pageNum:number): Promise<Project[] | undefined> {
+    const end = name.replace(/.$/, c => String.fromCharCode(c.charCodeAt(0) + 1));
+    let res: any = [];
+    const snapshot = await projectsRef.where('name', '>=',name).where('name', '<', end).limit(perPage).offset(perPage * (pageNum - 1)).get();
+    if (snapshot.empty) return undefined;
+    snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
+    return res;
+  }
 
   public static async findByTag(tagName: string): Promise<Project[] | undefined> {
     let res: any = [];

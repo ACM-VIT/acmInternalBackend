@@ -258,6 +258,25 @@ router.get(
     })
 )
 
+router.get(
+    "/byPartialName/:name/:pageNum",
+    asyncHandler(async (req, res) => {
+        let projectName = req.params.name;
+        let pageNum = parseInt(req.params.pageNum)
+        projectName = projectName.trim().toLowerCase();
+        const project = await ProjectRepo.findByNamePartialPaginate(projectName,pageNum);
+        if (!project)
+            throw new BadRequestError(
+                `Project ${projectName} does not exist in db`
+            );
+
+        new SuccessResponse(`Project with name: ${projectName}`, {
+            project
+        }).send(res);
+    })
+)
+
+
 
 
 export default router;
