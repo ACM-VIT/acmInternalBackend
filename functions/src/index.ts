@@ -9,6 +9,7 @@ import { ApiError, InternalError, NotFoundError } from "./core/ApiError";
 import { SuccessMsgResponse } from "./core/ApiResponse";
 import Logger from "./core/Logger";
 import RequestLogger from "./core/RequestLogger";
+import algoliasearch from 'algoliasearch';
 import { populateRole } from './database';
 import { KEYSTORE_COLLECTION_NAME } from "./database/model/KeyStore";
 import { MEETING_COLELCTION_NAME } from "./database/model/Meeting";
@@ -132,3 +133,26 @@ export const NotifyNewProject = functions.firestore.document('Projects/{projectI
   return null;
 });
 */
+
+const ALGOLIA_ID = functions.config().algolia.app_id;
+const ALGOLIA_ADMIN_KEY = functions.config().algolia.api_key;
+const ALGOLIA_INDEX_NAME = 'projects';
+
+const client = algoliasearch(ALGOLIA_ID, ALGOLIA_ADMIN_KEY);
+const index = client.initIndex(ALGOLIA_INDEX_NAME);
+
+exports.addToIndex = functions.firestore.document('Projects/{projectId}').onCreate(snapshot=>{
+  const data=snapshot.data();
+  const objectId = snapshot.id;
+
+  return index.saveObject({...data,objectId});
+});
+
+exports.updateIndex = functions.firestore.document('Projects/{projectId}').onUpdate((change)=>{
+  const newData=change.after.data();
+  const objectId = change.after.id;
+
+  return index.saveObject({...newData,objectId});
+});
+
+exports.deleteIndex = functions.firestore.document('Projects/{projectId}').onDelete((snapshot)=>index.deleteObject(snapshot.id));
