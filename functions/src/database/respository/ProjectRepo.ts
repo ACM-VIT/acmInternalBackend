@@ -61,8 +61,9 @@ export default class ProjectRepo {
   }
 
   public static async findByNamePartial(name: string): Promise<Project[] | undefined> {
+    const end = name.replace(/.$/, c => String.fromCharCode(c.charCodeAt(0) + 1));
     let res: any = [];
-    const snapshot = await projectsRef.startAt(name).endAt(name+ "\uf8ff").get();
+    const snapshot = await projectsRef.where('name', '>=',name).where('name', '<', end).get();
     if (snapshot.empty) return undefined;
     snapshot.forEach((ele) => res.push({ id: ele.id, ...ele.data() }));
     return res;
