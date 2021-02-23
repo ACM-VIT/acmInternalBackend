@@ -16,4 +16,5 @@ export default interface Meeting {
     start: Date;
     initiator: User;
     calEventId?: string;
+    updatedAt?:Date;
 }
