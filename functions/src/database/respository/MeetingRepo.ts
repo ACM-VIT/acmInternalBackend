@@ -55,7 +55,7 @@ export default class MeetingRepo {
         return res;
       }
 
-      public static async fetchByUser(user:User): Promise<Meeting[] | undefined> {
+      public static async fetchByInitiator(user:User): Promise<Meeting[] | undefined> {
         const allMeetings = await meetingsRef
           .where("initiator","==",user)
           .orderBy("updatedAt", "desc")
@@ -70,7 +70,7 @@ export default class MeetingRepo {
         );
         return res;
       }
-      public static async fetchByUserPaginate(user:User,pageNum:number): Promise<Meeting[] | undefined> {
+      public static async fetchByInitiatorPaginate(user:User,pageNum:number): Promise<Meeting[] | undefined> {
         const allMeetings = await meetingsRef
           .where("initiator","==",user)
           .orderBy("updatedAt", "desc")
