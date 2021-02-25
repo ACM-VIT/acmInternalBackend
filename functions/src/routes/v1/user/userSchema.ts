@@ -11,6 +11,7 @@ export default {
     projects: Joi.array(),
     accounts_connected: Joi.array(),
     profilePic:Joi.string().uri(),
+    year:Joi.number(),
   }),
   findByEmail: Joi.object().keys({
     email: Joi.string().email().required(),
@@ -27,6 +28,7 @@ export default {
     fcm_token:Joi.string(),
     profilePic:Joi.string().uri(),
     pwd:Joi.string(),
+    year:Joi.number(),
   }),
   byId: Joi.object().keys({
     id: JoiFirebaseId(), //isrequired
