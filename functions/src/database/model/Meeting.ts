@@ -17,4 +17,7 @@ export default interface Meeting {
     initiator: User;
     calEventId?: string;
     updatedAt?:Date;
+    attendeesName?:Array<string>;
+    attendeesId?:Array<string>;
+    attendeesProfiePic?:Array<string>;
 }

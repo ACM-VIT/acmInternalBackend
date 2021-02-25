@@ -1,4 +1,5 @@
 import { meetingsRef } from "../..";
+import Logger from "../../core/Logger";
 import Meeting from "../model/Meeting";
 import User from "../model/User";
 
@@ -14,6 +15,12 @@ export default class MeetingRepo {
         const newUser = await (await createdMeetingRef.get()).data() as Meeting;
         return { ...newUser, id: createdMeetingRef.id };
     }
+
+    public static async update(id: string, updates: any): Promise<any> {
+      updates["updatedAt"] = new Date();
+      return meetingsRef.doc(id).update(updates);
+    }
+
     public static async findByTitleAndStartTime(
         title: string,
         start: string,
@@ -130,5 +137,40 @@ export default class MeetingRepo {
         await doc.delete();
         console.log(`deleted: ${id}`);
         return;
+    }
+
+    public static async addToMeeting(id: string, users: Array<User>): Promise<any | undefined> {
+      const meeting = await this.findById(id);
+      Logger.info("test0"+JSON.stringify(meeting,null,2));
+      Logger.info("test0"+JSON.stringify(users,null,4));
+      if (!meeting) return "np";
+      if (!meeting.attendeesName) meeting.attendeesName = [];
+      if (!meeting.attendeesProfiePic) meeting.attendeesProfiePic = [];
+      if (!meeting.attendeesId) meeting.attendeesId = [];
+      Logger.info("test1");
+      const members: Array<string> = meeting.attendeesName;
+      const pArr: Array<string> = meeting.attendeesProfiePic;
+      const idArr: Array<string> = meeting.attendeesId;
+
+      for(let user of users) {
+        if (!user.profilePic) return "pp";
+        if (!user.id) return "id";
+      
+        if (!members.includes(user.full_name))
+          members.push(user.full_name);
+        if (!pArr.includes(user.profilePic))
+          pArr.push(user.profilePic);
+        if (!idArr.includes(user.id))
+          idArr.push(user.id);
+      }
+
+     
+      meeting.attendeesName = members;
+      meeting.attendeesProfiePic = pArr;
+      meeting.attendeesId = idArr;
+      Logger.info("test 4"+JSON.stringify(meeting));
+      await this.update(id, meeting);
+      Logger.info("test 5");
+      return meeting;
     }
 }

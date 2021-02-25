@@ -5,6 +5,7 @@ import { SuccessResponse } from '../../../core/ApiResponse';
 import Meeting, { MeetingStatus } from '../../../database/model/Meeting';
 import GoogleMeet from '../../../database/respository/GoogleMeetRepo';
 import MeetingRepo from '../../../database/respository/MeetingRepo';
+import UserRepo from '../../../database/respository/UserRepo';
 import asyncHandler from '../../../helpers/asyncHandler';
 import validator from '../../../helpers/validator';
 import { ProtectedRequest } from '../../../types/app-request';
@@ -25,6 +26,7 @@ router.post(
         const exists = await MeetingRepo.findByTitleAndStartTime(title, start);
         if (exists) throw new BadRequestError(`${title} already scheduled at ${title}`);
 
+
         const inputMeet: Meeting = {
             title,
             about,
@@ -40,6 +42,18 @@ router.post(
 
             const meeting = await MeetingRepo.create(inputMeet);
             if (!meeting) throw new InternalError("error: Failed to create a new Meeting");
+            if (!meeting.id) throw new InternalError("error: no meeting id found .Failed to create a new Meeting");
+
+            if(req.body.attendees) {
+                let users:Array<any> = [];
+                for(let name of req.body.attendees){
+                    const user = await UserRepo.findByName(name);
+                    if(!user) throw new BadRequestError(`No User Named ${name} found in db. check attendees field`);
+                    users.push(user);
+                }
+                const joinedMeeting = await MeetingRepo.addToMeeting(meeting.id,users);
+                console.log(JSON.stringify(joinedMeeting,null,2));
+            }
 
             new SuccessResponse("Sucessfully added the meeting to calender", {
                 meeting,

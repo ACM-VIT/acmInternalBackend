@@ -5,6 +5,7 @@ export default {
         title: Joi.string().required(),
         about: Joi.string().required(),
         start: Joi.date().iso().required(),
+        attendees:Joi.array().items(Joi.string().min(1).required()),
     }),
     cancel: Joi.object().keys({
         title: Joi.string().required(),
